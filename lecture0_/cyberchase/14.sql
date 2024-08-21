@@ -1,2 +1,2 @@
 SELECT "title" FROM "episodes"
-WHERE "topic" IS NULL
+WHERE "air_date" LIKE "%-12-%";
