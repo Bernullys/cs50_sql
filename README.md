@@ -6,97 +6,224 @@ Tables are structured database.
 
 Lecture 0. Introduction / Querying
 
-Three reasons to move beyond spreadsheets to databeses are:
-    - Scale.
-    - Update Capacity.
-    - Speed.
+    Three reasons to move beyond spreadsheets to databeses are:
+        - Scale.
+        - Update Capacity.
+        - Speed.
 
-A database can perform:
-    - create.
-    - read.
-    - update.
-    - delete.
+    A database can perform:
+        - create.
+        - read.
+        - update.
+        - delete.
 
-Database management system (DBMS) examples: MySQL, Oracle, PostgreSQLLite, Microsoft Access, MongoDB. How to choice of a DBMS:
-    - Cost.
-    - Amount of support.
-    - Weight.
+    Database management system (DBMS) examples: MySQL, Oracle, PostgreSQLLite, Microsoft Access, MongoDB. How to choice of a DBMS:
+        - Cost.
+        - Amount of support.
+        - Weight.
 
-Getting Started with SQLite:
-Is a language used to interact with databases, via which we can create, read, update, and delete data in a database.
+    Getting Started with SQLite:
+    Is a language used to interact with databases, via which we can create, read, update, and delete data in a database.
 
-SELECT * FROM "database";   Select everything.
-SELECT "column1", "column2", "column_n", FROM "database";
+    SELECT * FROM "database";   Select everything.
+    SELECT "column1", "column2", "column_n", FROM "database";
 
-        Apart: to work with sqlite3 in my pc I did this:
-            - Install sqlite3 in my WSL using sudo apt install sqlite3.
-            - In VSC install SQLite.
-            - SQLite Viewer (It got installed localy).
-            - Now I can run in the Terminal: sqlite3 database_name.db and will go to the sqlite enviroment. To exit use the command .quit.
-            - Then I can type the SQL code.
-            - This command: cat file_name.sql | sqlite3 database_name.db > output.txt will run directly in the Terminal the SQL code in file_name.sql and put the output in a file called output.txt.
+            Apart: to work with sqlite3 in my pc I did this:
+                - Install sqlite3 in my WSL using sudo apt install sqlite3.
+                - In VSC install SQLite.
+                - SQLite Viewer (It got installed localy).
+                - Now I can run in the Terminal: sqlite3 database_name.db and will go to the sqlite enviroment. To exit use the command .quit.
+                - Then I can type the SQL code.
+                - This command: cat file_name.sql | sqlite3 database_name.db > output.txt will run directly in the Terminal the SQL code in file_name.sql and put the output in a file called output.txt.
 
-LIMIT keyword limit the number of rows to output.
-SELECT "column1", FROM "database" LIMIT 5;
+    LIMIT keyword limit the number of rows to output.
+    SELECT "column1", FROM "database" LIMIT 5;
 
-WHERE keyword is used to select rows based on condition. Conditions could be = , !=, <> (also not equal).
-SELECT "column1", FROM "database" WHERE "column1" = "value";
-If we are using a string as condition it has to be inside single quotes.
+    WHERE keyword is used to select rows based on condition. Conditions could be = , !=, <> (also not equal).
+    SELECT "column1", FROM "database" WHERE "column1" = 'value';
+    If we are using a string as condition it has to be inside single quotes.
 
-NOT keyword is used with WHERE --> WHERE NOT
+    NOT keyword is used with WHERE --> WHERE NOT
 
-Conditionals: AND OR ()
-SELECT "title", "format"
-FROM "longlist"
-WHERE ("year" = 2022 OR "year" = 2023) AND "format" != 'hardcover';
+    Conditionals: AND OR ()
+    SELECT "title", "format"
+    FROM "longlist"
+    WHERE ("year" = 2022 OR "year" = 2023) AND "format" != 'hardcover';
 
-Conditions used with NULL, IS NULL and IS NOT NULL.
-SELECT "title", "translator"
-FROM "longlist"
-WHERE "translator" IS NULL;
+    Conditions used with NULL, IS NULL and IS NOT NULL.
+    SELECT "title", "translator"
+    FROM "longlist"
+    WHERE "translator" IS NULL;
 
-LIKE keyword to match some string. LIKE is case insentitive.
-% matches any characters around a given string.
-_ matches a single character.
-SELECT "title"
-FROM "longlist"
-WHERE "title" LIKE '%love%';
+    LIKE keyword to match some string. LIKE is case insentitive.
+    % matches any characters around a given string.
+    _ matches a single character.
+    SELECT "title"
+    FROM "longlist"
+    WHERE "title" LIKE '%love%';
 
-SELECT "title"
-FROM "longlist"
-WHERE "title" LIKE 'P_re';
+    SELECT "title"
+    FROM "longlist"
+    WHERE "title" LIKE 'P_re';
 
-Ranges can be used with < > <=  >=
-SELECT "title", "author"
-FROM "longlist"
-WHERE "year" >= 2019 AND "year" <= 2022;
+    Ranges can be used with < > <=  >=
+    SELECT "title", "author"
+    FROM "longlist"
+    WHERE "year" >= 2019 AND "year" <= 2022;
 
-BETWEEN keyword:
-SELECT "title", "author"
-FROM "longlist"
-WHERE "year" BETWEEN 2019 AND 2022; 
-You might find it helpful to know you can use BETWEEN with dates, such as BETWEEN '2000-01-01' AND '2000-12-31'.
+    BETWEEN keyword:
+    SELECT "title", "author"
+    FROM "longlist"
+    WHERE "year" BETWEEN 2019 AND 2022; 
+    You might find it helpful to know you can use BETWEEN with dates, such as BETWEEN '2000-01-01' AND '2000-12-31'.
 
-ORDER BY keywords, works with DESC ASC. Default oreder by ascending and alphabetic.
-SELECT "title", "rating", "votes"
-FROM "longlist"
-ORDER BY "rating" DESC, "votes" DESC
-LIMIT 10;
+    ORDER BY keywords, works with DESC ASC. Default oreder by ascending and alphabetic.
+    SELECT "title", "rating", "votes"
+    FROM "longlist"
+    ORDER BY "rating" DESC, "votes" DESC
+    LIMIT 10;
 
-Agregate functions:
-COUNT AVG MIN MAX SUM, works with ROUND
-SELECT AVG("rating")
-FROM "longlist";
+    Agregate functions:
+    COUNT AVG MIN MAX SUM, works with ROUND
+    SELECT AVG("rating")
+    FROM "longlist";
 
-SELECT ROUND(AVG("rating"), 2)
-FROM "longlist";
+    SELECT ROUND(AVG("rating"), 2)
+    FROM "longlist";
 
-AS keyword to define a name for a query.
-SELECT ROUND(AVG("rating"), 2) AS "average rating"
-FROM "longlist";
+    AS keyword to define a name for a query.
+    SELECT ROUND(AVG("rating"), 2) AS "average rating"
+    FROM "longlist";
 
-SELECT COUNT(*) FROM "longlist"; will output the number of rows of the table.
+    SELECT COUNT(*) FROM "longlist"; will output the number of rows of the table.
 
-DISTINCT keyword returns distincts results.
-SELECT COUNT(DISTINCT "publisher")
-FROM "longlist";
+    DISTINCT keyword returns distincts results.
+    SELECT COUNT(DISTINCT "publisher")
+    FROM "longlist";
+
+
+Lecture 1 - Relating
+
+    One to one.
+    One to many.
+    Many to many.
+
+    Entity ralationship diagrams (ER Diagrams).
+    0         Zero.
+    +         One.
+    arrow     Many.
+
+    Keys
+    Is an identifier that is unique for every item in a table.
+
+    Foreing Keys
+    Is a primary key taken from a different table. By referencing the primary key of a different table, it helps relate tha tables by forming a link between them.
+
+
+    Subqueries
+    Is a query inside another query. These are also called nested queries.
+    Is usefull for one to one or many to many.
+
+    SELECT "title"
+    FROM "books"
+    WHERE "publisher_id" = (
+        SELECT "id"
+        FROM "publishers"
+        WHERE "publisher" = 'Fitzcarraldo Editions'
+    );
+
+    SELECT "name"
+    FROM "authors"
+    WHERE "id" = (
+        SELECT "author_id"
+        FROM "authored"
+        WHERE "book_id" = (
+            SELECT "id"
+            FROM "books"
+            WHERE "title" = 'Flights'
+            )
+    );
+
+
+    IN keyword
+    Is used to check whether the desired value is in a given list or set of values.
+    SELECT "title"
+    FROM "books"
+    WHERE "id" IN (
+        SELECT "book_id"
+        FROM "authored"
+        WHERE "author_id" = (
+            SELECT "id"
+            FROM "authors"
+            WHERE "name" = 'Fernanda Melchor'
+        )
+    );
+
+
+    JOIN keyword
+    This keyword allows us to combinetwo or more tables together.
+    SELECT * FROM "sea_lions"
+    JOIN "migrations" ON "migrations"."id" = "sea_lions"."id";
+
+    Inner JOIN / Outer JOIN
+
+    LEFT JOIN       LEFT OUTER JOIN
+    RIGHT JOIN      RIGHT OUTER JOIN
+    FULL JOIN       
+
+    NATURAL JOIN
+    Allows to omit the part of my previous JOINs (from ON forwards).
+    Also assume that the columns with the same name and values want to be join.
+    SELECT *
+    FROM "sea_lions"
+    NATURAL JOIN "migrations";
+
+
+    Sets
+    Sets are tables that results from queries.
+
+    SELECT 'author' AS "profession", "name" FROM "authors"; Important to know. OJO.
+
+    UNION
+    SELECT 'author' AS "profession", "name"
+    FROM "authors"
+    UNION
+    SELECT 'translator' AS "profession", "name"
+    FROM "translators";
+
+    INTERSET
+    SELECT "name" FROM "translators"
+    INTERSECT
+    SELECT "name" FROM "authors";
+
+    EXCEPT
+    SELECT "name" FROM "authors"
+    EXCEPT
+    SELECT "name" FROM "translators";
+
+    Example of use:
+    SELECT "book_id" FROM "translated"
+    WHERE "translator_id" = (
+    SELECT "id" from "translators"
+    WHERE "name" = 'Sophie Hughes'
+    )
+    INTERSECT
+    SELECT "book_id" FROM "translated"
+    WHERE "translator_id" = (
+    SELECT "id" from "translators"
+    WHERE "name" = 'Margaret Jull Costa'
+    );
+
+    Groups
+    Groups are used to group rows that have the same values in one or more columns.
+    GROUP BY
+    SELECT "book_id", ROUND(AVG("rating"), 2) AS "average rating"
+    FROM "ratings"
+    GROUP BY "book_id"
+    HAVING "average rating" > 4.0;    Having is like Where but when we are grouping first.
+
+    SELECT "book_id", ROUND(AVG("rating"), 2) AS "average rating"
+    FROM "ratings"
+    GROUP BY "book_id"
+    HAVING "average rating" > 4.0
+    ORDER BY "average rating" DESC;
