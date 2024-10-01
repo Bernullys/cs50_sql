@@ -161,7 +161,7 @@ Lecture 1 - Relating
 
 
     JOIN keyword
-    This keyword allows us to combinetwo or more tables together.
+    This keyword allows us to combine two or more tables together.
     SELECT * FROM "sea_lions"
     JOIN "migrations" ON "migrations"."id" = "sea_lions"."id";
 
