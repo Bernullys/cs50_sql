@@ -227,3 +227,72 @@ Lecture 1 - Relating
     GROUP BY "book_id"
     HAVING "average rating" > 4.0
     ORDER BY "average rating" DESC;
+
+Lecture 3 - Disigning
+
+    SQLLite command (not keyword) .schema shows how a data base was created.
+    .schema table_name will show only the schema of that table.
+
+    Creating a Database Schema:
+    To create a table we have to decide:
+        What kinds of tables we will have in our database,
+        What columns each of the tables will have, and
+        What types of data we should put in each of those columns.
+
+    Normalizing:
+    The process of separating our data is called normalizing. When normalizing we put each entity in its own table. Any specific entity, goes into the entity's own table.
+
+    Relating:
+    We have to decide how our entities are related.
+    We can also use an ER diagram to represesnt this relationship.
+
+    CREATE TABLE
+    To create a table I have to type sqlite3 database_name.db.
+    Don't work using touch database_name.db.
+    And then the command CREATE TABLE... is typed in the command line.
+
+                sqlite> CREATE TABLE "stations" (
+        ...>     "id",
+        ...>     "name",
+        ...>     "line"
+        ...> );
+
+    Then we create a table to relate entities. These tables are often called junction tables, associative entities or join tables.
+
+    Data Types and Storage Classes:
+    SQLite has five storage classes:
+        Null: nothing, or empty value
+        Integer: numbers without decimal points
+        Real: decimal or floating point numbers
+        Text: characters or strings
+        Blob: Binary Large Object, for storing objects in binary (useful for images, audio etc.)
+        A storage class can hold several data types.
+        For example, these are the data types that fall under the umbrella of the Integer storage class:
+            INTEGER:
+                0-byte integer
+                1-byte integer
+                2-byte integer
+                3-byte integer
+                4-byte integer
+                6-byte integer
+                8-byte integer
+    SQLite takes care of storing the input value under the right data type. In other words, we as programmers only need to choose a storage class and SQLite will do the rest!
+
+    A workaround could be to use 0 or 1 integer values to represent booleans.
+
+    Type Affinities:
+     It is possible to specify the data type of a column while creating a table.
+    However, columns in SQLite don’t always store one particular data type. They are said to have type affinities, meaning that they try to convert an input value into the type they have an affinity for.
+    The five type affinities in SQLite are: Text, Numeric (either integer or real values based on what the input value best converts to), Integer, Real and Blob.
+    Consider a column with a type affinity for Integers. If we try to insert “25” (the number 25 but stored as text) into this column, it will be converted into an integer data type.
+    Similarly, inserting an integer 25 into a column with a type affinity for text will convert the number to its text equivalent, “25”.
+
+    Adding Types to our Tables:
+    Command to delete tables: DROP TABLE "table_name";
+    (Whatch schema.sql file).
+
+    Table Constraints:
+    We can use table constraints to impose restrictions on certain values in our tables.
+    For example, a primary key column must have unique values. The table constraint we use for this is PRIMARY KEY.
+    Similarly, a constraint on a foreign key value is that it must be found in the primary key column of the related table! This table constraint is called, predictably, FOREIGN KEY.
+    
