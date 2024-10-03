@@ -295,4 +295,46 @@ Lecture 3 - Disigning
     We can use table constraints to impose restrictions on certain values in our tables.
     For example, a primary key column must have unique values. The table constraint we use for this is PRIMARY KEY.
     Similarly, a constraint on a foreign key value is that it must be found in the primary key column of the related table! This table constraint is called, predictably, FOREIGN KEY.
+
+    Column Constraints:
+    A column constraint is a type of constraint that applies to a specified column in the table.
+    SQLite has four column constraints:
+        CHECK: allows checking for a condition, like all values in the column must be greater than 0
+        DEFAULT: uses a default value if none is supplied for a row
+        NOT NULL: dictates that a null or empty value cannot be inserted into the column
+        UNIQUE: dictates that every value in this column must be unique
     
+    Altering Tables:
+    Commands to change tables:
+        ALTER TABLE "table_name"
+        RENAME TO "new_table_name"
+        ADD COLUMN "column_name" "data_type"
+        RENAME COLUMN "column_name" TO "new_column_name"
+        DROP COLUMN "column_name";
+    Other wise we can change it by hand in directly in the file.
+
+    Example:
+
+        CREATE TABLE "cards" (
+        "id" INTEGER,
+        PRIMARY KEY("id")
+        );
+
+        CREATE TABLE "stations" (
+            "id" INTEGER,
+            "name" TEXT NOT NULL UNIQUE,
+            "line" TEXT NOT NULL,
+            PRIMARY KEY("id")
+        );
+
+        CREATE TABLE "swipes" (
+            "id" INTEGER,
+            "card_id" INTEGER,
+            "station_id" INTEGER,
+            "type" TEXT NOT NULL CHECK("type" IN ('enter', 'exit', 'deposit')),
+            "datetime" NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            "amount" NUMERIC NOT NULL CHECK("amount" != 0),
+            PRIMARY KEY("id"),
+            FOREIGN KEY("station_id") REFERENCES "stations"("id"),
+            FOREIGN KEY("card_id") REFERENCES "cards"("id")
+        );
