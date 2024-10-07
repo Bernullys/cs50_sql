@@ -247,7 +247,7 @@ Lecture 3 - Disigning
     We can also use an ER diagram to represesnt this relationship.
 
     CREATE TABLE
-    To create a table I have to type sqlite3 database_name.db.
+    To create a table I have to type sqlite3 database_name.db. This will create a file called data_base.db. Then we have to read the schema.sql file which contains the commands to create tables.
     Don't work using touch database_name.db.
     And then the command CREATE TABLE... is typed in the command line.
 
