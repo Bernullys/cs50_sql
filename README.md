@@ -228,7 +228,7 @@ Lecture 1 - Relating
     HAVING "average rating" > 4.0
     ORDER BY "average rating" DESC;
 
-Lecture 3 - Disigning
+Lecture 2 - Disigning
 
     SQLLite command (not keyword) .schema shows how a data base was created.
     .schema table_name will show only the schema of that table.
@@ -338,3 +338,94 @@ Lecture 3 - Disigning
             FOREIGN KEY("station_id") REFERENCES "stations"("id"),
             FOREIGN KEY("card_id") REFERENCES "cards"("id")
         );
+
+Lecture 3 - Writing
+
+    Inserting Data:
+
+        INSERT INTO "table_name" ("field1", "field2", ...)
+        VALUES ("value1", "value2", ...);
+
+        NOTE: if a table has a PRIMARY KEY, this will be filled automatucally.
+        NOTE: if a constraint is declare and when adding values we don't respect it, will return an error.
+        
+    Inserting Multiple Rows:
+
+        INSERT INTO "table_name" (column0, ...)
+        VALUES
+        ("value1", ...),
+        ("value2", ...),
+        ...;
+    
+        Data could also be stored in a csv format.
+        First we have to start from zero, create a database fila and import the file we the data:
+            .import --csv --skip 1 csv_file.csv table_name
+        
+        If we have a data from in a csv without an id column, we can do it in a different way. We will to use a temporary table:
+            .import --csv csv_file.csv temporary_table
+            This time we won't need to skip line 1 because this way is reconized as the column names.
+        Next, we will select the data(without primary keys) from temporary_table and move it to out table_name, which was the goal all along.
+        We can do:
+            INSERT INTO "table_name" ("column1", ...)
+            SELECT "column1", ... FROM "temporary_table";
+        In this process, SQLite will automatically add the primary key values in the id column.
+        Then we can clean up our database:
+            DROP TABLE "temporary_table";
+
+    Deleting Data:
+
+        This command will delete all rows in the table:
+            DELETE FROM "table_name";
+        But we can match specific conditions like:
+           DELETE FROM "collections"
+            WHERE "title" = 'Spring outing'; 
+
+            DELETE FROM "collections"
+            WHERE "acquired" IS NULL;
+
+            DELETE FROM "collections"
+            WHERE "acquired" < '1909-01-01';
+
+        There might be cases where deleting some data could impact the integrity of a database. Foreign key constrains are a good example. A foreign key column references the primary key of a different table. If we were to delete the primary key, the foreign key column would have nothing to reference. Traying to delete this we get an error. This error notifies us that deleting this data would violate the foring key constraint set up in the table.
+        One possibility is to delete the corresponding rows from the connections_table and then deleting from the other table.
+
+        In another possibility, we can specify the action to be taken when an ID referenced by a foreign key is deleted. To do this, we use the keyword ON DELETE followed by the action to be taken.
+            ON DELETE RESTRICT: This restricts us from deleting IDs when the foreign key constraint is violated.
+            ON DELETE NO ACTION: This allows the deletion of IDs that are referenced by a foreign key and nothing happens.
+            ON DELETE SET NULL: This allows the deletion of IDs that are referenced by a foreign key and sets the foreign key references to NULL.
+            ON DELETE SET DEFAULT: This does the same as the previous, but allows us to set a default value instead of NULL.
+            ON DELETE CASCADE: This allows the deletion of IDs that are referenced by a foreign key and also proceeds to cascadingly delete the referencing foreign key rows. For example, if we used this to delete an artist ID, all the artist’s affiliations with the artwork would also be deleted from the table. Example:
+                FOREIGN KEY("artist_id") REFERENCES "artists"("id") ON DELETE CASCADE
+                FOREIGN KEY("collection_id") REFERENCES "collections"("id") ON DELETE CASCADE
+
+    Updating Data: (whatch the example of the class. From 1:09 minutes)
+
+        UPDATE table
+        SET column1 = value1, column2 = value2, ...
+        WHERE condition;
+
+    Triggers:
+
+        CREATE TRIGGER trigger_name
+        BEFORE/AFTER INSERT/UPDATE/DELETE ON table_name
+        FOR EACH ROW
+        BEGIN
+        -- trigger code
+        END;
+        Example:
+        CREATE TRIGGER "update_artist"
+        BEFORE UPDATE ON "artists"
+        FOR EACH ROW
+        BEGIN
+            UPDATE "affiliations"
+            SET "artist_id" = NEW."id"
+            WHERE "artist_id" = OLD."id";
+        END;
+        This trigger will update the affiliations table whenever an artist is updated in the artists table.
+
+    Solf deletions:
+
+        Is a tecnique to don't delete data, instead we update data and we add a column where we can keep track of the data we mark as deleted. Then we could select the data deleted or not if we want.
+
+
+ 
