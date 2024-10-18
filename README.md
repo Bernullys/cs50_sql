@@ -346,7 +346,7 @@ Lecture 3 - Writing
         INSERT INTO "table_name" ("field1", "field2", ...)
         VALUES ("value1", "value2", ...);
 
-        NOTE: if a table has a PRIMARY KEY, this will be filled automatucally.
+        NOTE: if a table has a PRIMARY KEY, this will be filled automatically.
         NOTE: if a constraint is declare and when adding values we don't respect it, will return an error.
         
     Inserting Multiple Rows:
@@ -358,8 +358,9 @@ Lecture 3 - Writing
         ...;
     
         Data could also be stored in a csv format.
-        First we have to start from zero, create a database fila and import the file we the data:
+        First we have to start from zero, create a database file and import the file we the data:
             .import --csv --skip 1 csv_file.csv table_name
+            --skip 1 is to avoid adding the first row of the csv file but this is when we already have the table with the column names.
         
         If we have a data from in a csv without an id column, we can do it in a different way. We will to use a temporary table:
             .import --csv csv_file.csv temporary_table
@@ -369,10 +370,14 @@ Lecture 3 - Writing
             INSERT INTO "table_name" ("column1", ...)
             SELECT "column1", ... FROM "temporary_table";
         In this process, SQLite will automatically add the primary key values in the id column.
+        Note: the "id" has to have INTEGER constrains.
         Then we can clean up our database:
             DROP TABLE "temporary_table";
 
     Deleting Data:
+
+        Deleting a table: 
+            DROP TABLE "table_name";
 
         This command will delete all rows in the table:
             DELETE FROM "table_name";
