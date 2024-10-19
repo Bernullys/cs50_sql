@@ -308,7 +308,7 @@ Lecture 2 - Disigning
     Commands to change tables:
         ALTER TABLE "table_name"
         RENAME TO "new_table_name"
-        ADD COLUMN "column_name" "data_type"
+        ADD COLUMN "column_name" data_type DEFAULT VALUE XXX
         RENAME COLUMN "column_name" TO "new_column_name"
         DROP COLUMN "column_name";
     Other wise we can change it by hand in directly in the file.
@@ -316,7 +316,7 @@ Lecture 2 - Disigning
     Example:
 
         CREATE TABLE "cards" (
-        "id" INTEGER,
+        "id" INTEGER,'cup
         PRIMARY KEY("id")
         );
 
@@ -371,13 +371,11 @@ Lecture 3 - Writing
             SELECT "column1", ... FROM "temporary_table";
         In this process, SQLite will automatically add the primary key values in the id column.
         Note: the "id" has to have INTEGER constrains.
+        
         Then we can clean up our database:
-            DROP TABLE "temporary_table";
+            DROP TABLE "temporary_table"; To remove that entire table.
 
     Deleting Data:
-
-        Deleting a table: 
-            DROP TABLE "table_name";
 
         This command will delete all rows in the table:
             DELETE FROM "table_name";
@@ -399,7 +397,9 @@ Lecture 3 - Writing
             ON DELETE NO ACTION: This allows the deletion of IDs that are referenced by a foreign key and nothing happens.
             ON DELETE SET NULL: This allows the deletion of IDs that are referenced by a foreign key and sets the foreign key references to NULL.
             ON DELETE SET DEFAULT: This does the same as the previous, but allows us to set a default value instead of NULL.
-            ON DELETE CASCADE: This allows the deletion of IDs that are referenced by a foreign key and also proceeds to cascadingly delete the referencing foreign key rows. For example, if we used this to delete an artist ID, all the artist’s affiliations with the artwork would also be deleted from the table. Example:
+            ON DELETE CASCADE: This allows the deletion of IDs that are referenced by a foreign key and also proceeds to cascadingly delete the referencing foreign key rows. 
+            For example, if we used this to delete an artist ID, all the artist’s affiliations with the artwork would also be deleted from the table. 
+            Example: (This is does when Designing the Tables, is a constrains)
                 FOREIGN KEY("artist_id") REFERENCES "artists"("id") ON DELETE CASCADE
                 FOREIGN KEY("collection_id") REFERENCES "collections"("id") ON DELETE CASCADE
 
@@ -409,6 +409,24 @@ Lecture 3 - Writing
         SET column1 = value1, column2 = value2, ...
         WHERE condition;
 
+        Example:
+            UPDATE "created" SET "artist_id" = (
+                SELECT "id" FROM "artists"
+                WHERE "name" = 'John'
+            )
+            WHERE "collections_id" = (
+                SELECT "id" FROM "collections"
+                WHERE "title" = 'Spring outing'
+            );
+
+        To clean up data from tables we can use differents ways and functions like:
+            trim("column_1")
+            upper("column_1")
+            Example:
+                UPDATE "table_1" SET "column_1" = trim("column_1);
+            Also we can use conditions LIKE, WHERE, %, _, etc...
+
+
     Triggers:
 
         CREATE TRIGGER trigger_name
@@ -417,6 +435,7 @@ Lecture 3 - Writing
         BEGIN
         -- trigger code
         END;
+        
         Example:
         CREATE TRIGGER "update_artist"
         BEFORE UPDATE ON "artists"
@@ -427,6 +446,7 @@ Lecture 3 - Writing
             WHERE "artist_id" = OLD."id";
         END;
         This trigger will update the affiliations table whenever an artist is updated in the artists table.
+        OLD and NEW will take the value of data which we are deleting or adding to our table.
 
     Solf deletions:
 
