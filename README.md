@@ -362,7 +362,7 @@ Lecture 3 - Writing
             .import --csv --skip 1 csv_file.csv table_name
             --skip 1 is to avoid adding the first row of the csv file but this is when we already have the table with the column names.
         
-        If we have a data from in a csv without an id column, we can do it in a different way. We will to use a temporary table:
+        If we have a data form in a csv without an id column, we can do it in a different way. We will to use a temporary table:
             .import --csv csv_file.csv temporary_table
             This time we won't need to skip line 1 because this way is reconized as the column names.
         Next, we will select the data(without primary keys) from temporary_table and move it to out table_name, which was the goal all along.
@@ -370,7 +370,7 @@ Lecture 3 - Writing
             INSERT INTO "table_name" ("column1", ...)
             SELECT "column1", ... FROM "temporary_table";
         In this process, SQLite will automatically add the primary key values in the id column.
-        Note: the "id" has to have INTEGER constrains.
+        Note: the "id" has to have INTEGER constrains, and also has to be set as PRIMARY KEY
         
         Then we can clean up our database:
             DROP TABLE "temporary_table"; To remove that entire table.
@@ -452,5 +452,8 @@ Lecture 3 - Writing
 
         Is a tecnique to don't delete data, instead we update data and we add a column where we can keep track of the data we mark as deleted. Then we could select the data deleted or not if we want.
 
-
- 
+    
+    NOTE:   terminal command that is handy when we want to run a sql file which has a command that are not sqlite code (like problem Meteorite Cleaning).
+            cat file_name.sql | sqlite3 data_base_name.db
+            cat file_name.sql outputs the data in file_name.sql.
+            sqlite3 data_base_name.db opens a file called data_base_name.db with the sqlite3 engine, as you’re already familiar with.
