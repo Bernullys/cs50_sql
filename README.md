@@ -312,6 +312,10 @@ Lecture 2 - Disigning
         RENAME COLUMN "column_name" TO "new_column_name"
         DROP COLUMN "column_name";
     Other wise we can change it by hand in directly in the file.
+    We can add default values as:
+        Example:
+            ALTER TABLE "table_name"
+            ADD COLUMN "column_name" data_type DEFAULT VALUE X;
 
     Example:
 
@@ -457,3 +461,102 @@ Lecture 3 - Writing
             cat file_name.sql | sqlite3 data_base_name.db
             cat file_name.sql outputs the data in file_name.sql.
             sqlite3 data_base_name.db opens a file called data_base_name.db with the sqlite3 engine, as you’re already familiar with.
+
+
+
+Lecture 4 - Viewing
+
+    Views:
+        A View is a virtual table defined by a query. This new table can be queried later on.
+        View re useful for:
+            Simplifying: putting together data fron different tables to be required more simply.
+            Aggregating: running aggregate functions, like finding the sum, and storing the results.
+            Partitioning: dividing data into logical pieces.
+            Securing: hiding columns that should be kept secure.
+            There are others types of views...
+            Views can not be updated.
+
+        Simplifying:
+            This is the format of code:
+                CREATE VIEW "view_name" AS
+                SELECT ...;
+            This will be added to the schema of the database.
+            If we want to add a view only for the time we are connected to a database we should use:
+                CREATE TEMPORARY VIEW "view_name" AS
+                SELECT ...;
+            
+            Example:
+                CREATE VIEW "longlist" AS
+                SELECT "name", "title" FROM "authors"
+                JOIN "authored" ON "authors"."id" = "authored"."author_id"
+                JOIN "books" ON "books"."id" = "authored"."book_id";
+
+                This table will simplify futures querys beacuse we can query anything fron this table.
+    
+        Aggregating:
+            Is basicly the same code but using aggregation functions.
+
+        Common Table Expression (CTE):
+            A regular view exists forever in our database. A temporary view exist for the duration of our connection with the database. A CTE is a view that exist for a single query alone.
+            A CTE is defined by a query and can be used in a query.
+            This is the form:
+
+                WITH "name" AS (
+                    SELECT ...
+                ), ...
+                SELECT ... FROM "name";
+
+            Example:
+                WITH "average_book_ratings" AS (
+                SELECT "book_id", "title", "year", ROUND(AVG("rating"), 2) AS "rating" FROM "ratings"
+                JOIN "books" ON "ratings"."book_id" = "books"."id"
+                GROUP BY "book_id"
+                )
+                SELECT "year" ROUND(AVG("rating"), 2) AS "rating" FROM "average_book_ratings"
+                GROUP BY "year";
+
+        Partioning:
+            With the same approach has simplifying and aggregating but to our conviniance we can partion tables to be better manipulated.
+        
+        Securing:
+            Some information in tables could be categorized as Personally Identifiable Information (PII) which companies are not allowed to share indiscriminately.
+            We can create a view that does not contains this type of information but SQLite3 does not allow access control. This means that someone simply query the original table and see all the information.
+            Example:
+                CREATE VIEW "analysis" AS
+                SELECT "id", "origin", "destination", 'Anonymous' AS "rider"
+                FROM "rides";
+
+        Solf Deletions:
+            As we saw in previous weeks, a solf deletion involves marking a row as deleted insted of removing it from the table.
+            We can create a view that shows only the rows that are not marked as deleted. And had that view which will be showing the rows which aren't mark as deleted in the real table with each solf deletion.
+            Example:
+                CREATE VIEW "current_collections" AS
+                SELECT "id", "title", "accession_number", "acquired"
+                FROM "collections"
+                WHERE "deleted" = 0;
+
+                This query is the solf deletion:
+                UPDATE "collections"
+                SET "deleted" = 1
+                WHERE "title" = 'Farmers working at dawn';
+
+        Creating triggers on views:
+            We can create triggers to insert or delete date from the underlying tables.
+            This way to delete:
+                CREATE TRIGGER "name"
+                INSTED OF DELETE ON "view_name"
+                FOR EACH ROW
+                BEGIN
+                    ...;
+                END;
+
+                This way to insert:
+                CREATE TRIGGER "name"
+                INSTED OF INSERT ON "view_name"
+                FOR EACH ROW 
+                WHEN condition
+                BEGIN
+                    ...;
+                END;
+
+                (In the lecture are a good example of how to use triggers on insert).
