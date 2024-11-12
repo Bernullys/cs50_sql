@@ -560,3 +560,79 @@ Lecture 4 - Viewing
                 END;
 
                 (In the lecture are a good example of how to use triggers on insert).
+
+
+Lecture 5 - Optimizing.
+
+    SqLite has a command .time on that enables us to time our queries.
+    To find the size of a database on the terminal, we can use a Unix command: du -b databas_name.db
+
+    Index.
+        The same way that textbooks often have an index, databases tables can have an index as well.
+        An index is a structure used to speed uo the retrieval of rows from a table.
+        Index's comes with trade-offs with space and the time it takes to later insert data into tables.
+        To create an index:
+            CREATE INDEX "index_name" ON "table_name" ("column_name", ...);
+
+        Index across Multiple Tables.
+        To understand what kind of index could help speed this query up, we can run EXPLAIN QUERY PLAB ahead of the query.
+            EXPLAIN QUERY PLAN
+            SELECT ...; (nested queries).
+            When we run explain query plan we can see if the queries and sub queries are done by search or scan. Scan is slower so the idea is to add indexes to the queries which are on scans.
+        
+        Covering Index: An index in which queried data can be retrived from the index itself. I think that to create a covering index we have to create an index in a table that relates two tables (to be confirmed).
+
+        Space Trade-off.
+            Indexes seem incredibly helpful, but there are trade-off associated - they occupy additional space in the database, so while we gain query speed, we do lose space.
+            An index is stored un a database as a data structure called a B-Tree, or balanced tree.
+        TIme Trade-off.
+            Similar to the space trade-off, it also takes longer to insert data into a column and then add it ti an index. Each time a value is added to the index, the B-tree needs to be traversed to figure out where the value should be added.
+        
+    Partial Index.
+        This is an index that includes only a subset of rows from a table, allowing us to save some space that a full index would occupy.
+        This is especially useful when we know thet users query only a subset of rows fron the table.
+        Example:    CREATE INDEX "recents" ON "movies" ("titles")
+                    WHERE "year" = 2023;
+
+    Vaccum.
+        There are ways to delete unused space in out database. Sqlite allows us to "vacuum" data -  this cleans up previously deleted data (that is actually no deleted, but just marked as space being available for the next INSERT).
+        Run:
+            VACCUM;
+        
+    Concurrency.
+        Concurrency is the simultaneous handling of multiple queries or interactions by the database. Imagine a database for a website, or a finalcial service, that gets a ot of trafficat the same time. Concurrency is particulary important in these cases.
+
+        Transactions.
+            A unit of work in a database.
+            A transaction is a sequence of operations that are executed as a single, all-or-nothing unit.
+            If any part of the transaction fails, the entire transaction is rolled back and the database is returned to its previous state.
+            This is useful for ensuring data consistency and integrity.
+            Transactions have some properties, which can be remembered using the acronym ACID:
+                Atomicity: can't be broken down into smaller pieces.
+                Consistency: should not violate a database constraint.
+                Isolation: if multiple users access a database, their transaction cannot interfere with each other.
+                Durability: in case of any faliure within the database, all data changed by trasaction will remain.
+            To make a transaction:
+                BEGIN TRANSACTION;
+                    ...
+                COMMIT;
+            TO revert a transaction we use rollback:
+                BEGIN TRANSACTION;
+                    ...
+                ROLLBACK;
+            
+            Race Conditions:
+                A transaction can help guard against race conditions.
+                A race condition occurs when multiple entities simultaneously acces and make decisions based on a shared value, potentially causing inconsistencies in the database.
+                To make transactions sequential, SQLite and other database management systems use locks on databases. A table in a database could be in a few different states:
+                    UNLOCKED: this is the default state when no user is accessing the database.
+                    SHARED: when a transaction is reading data from the database, it obtains shared lock that allows other trasactions to read simultaneously from the database.
+                    EXCLUSIVE: if a transaction needs to write or update data, it obtains an exclusive lock on the database that does not allow other transactions to occur at the same time (no even a read).
+                    SQLite can lock a database with this command:
+                        BEGING EXCLUSIVE TRANSACTION; This way no one could access to the database because is lock.
+
+
+
+
+
+ 
