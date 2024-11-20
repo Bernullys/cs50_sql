@@ -83,6 +83,8 @@ Lecture 0. Introduction / Querying
     ORDER BY "rating" DESC, "votes" DESC
     LIMIT 10;
 
+    NOTE: ORDER BY accepts Agregate functions.
+
     Agregate functions:
     COUNT AVG MIN MAX SUM, works with ROUND
     SELECT AVG("rating")
@@ -564,8 +566,8 @@ Lecture 4 - Viewing
 
 Lecture 5 - Optimizing.
 
-    SqLite has a command .time on that enables us to time our queries.
-    To find the size of a database on the terminal, we can use a Unix command: du -b databas_name.db
+    SqLite has a command .timer on that enable us to time our queries.
+    To find the size of a database on the terminal, we can use a Unix command: du -b database_name.db
 
     Index.
         The same way that textbooks often have an index, databases tables can have an index as well.
@@ -580,7 +582,8 @@ Lecture 5 - Optimizing.
             SELECT ...; (nested queries).
             When we run explain query plan we can see if the queries and sub queries are done by search or scan. Scan is slower so the idea is to add indexes to the queries which are on scans.
         
-        Covering Index: An index in which queried data can be retrived from the index itself. I think that to create a covering index we have to create an index in a table that relates two tables (to be confirmed).
+        Covering Index: An index in which queried data can be retrived from the index itself.
+        A covering index is a special type of index that includes all columns needed for the query. This means the database can fulfill the query directly from the index without having to look up additional data in a table.
 
         Space Trade-off.
             Indexes seem incredibly helpful, but there are trade-off associated - they occupy additional space in the database, so while we gain query speed, we do lose space.
