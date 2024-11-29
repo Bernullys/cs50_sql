@@ -619,7 +619,7 @@ Lecture 5 - Optimizing.
                 BEGIN TRANSACTION;
                     ...
                 COMMIT;
-            TO revert a transaction we use rollback:
+            To revert a transaction we use rollback:
                 BEGIN TRANSACTION;
                     ...
                 ROLLBACK;
@@ -634,8 +634,110 @@ Lecture 5 - Optimizing.
                     SQLite can lock a database with this command:
                         BEGING EXCLUSIVE TRANSACTION; This way no one could access to the database because is lock.
 
+Lecture 6 - Scaling.
+
+    Scalability us the ability to increase or decrease the capacity of an application or database to meet demand.
+
+    MySQL.
+        I have to install it with: sudo apt install mysql-server.
+        I can go into mysql enviroment using: sudo mysql.
+        Also I can do: cat /etc/mysql/debian.cnf, and find the debian password and go in with that using: mysql -u debian-sys-maint -p.
+
+        Commands: 
+            SHOW DATABASES; There will be default databases in the server.
+            USE database_name;
+            SHOW TABLES;
+            DESCRIBE `table_name`;
+
+        Type in the terminal:
+            mysql -u root -h 127.0.0.1 -P 3306 -p (I set a password to enter this way).
+                -u indicates the user. We provide the user we want to connect to the database as — root (synonymous with database admin, in this case).
+                127.0.0.1 is the address of local host on the internet (our own computer).
+                3306 is the port we want to connect to, and this is the default port where MySQL is hosted. Think of the combination of host and port as the address of the database we are trying to connect to!
+                -p at the end of the command indicates that we want to be prompted for a password when connecting.
+        
+        MySQL does have data types, like INT and VARCHAR but unlike SQLite, it will not allow us to enter data of a different type and try to convert it.
+
+        Size and Range of numbers we can store in each of the integer types:
+            Data Type   Size(in Bytes)  Minimum Value (signed)  Maximum Value (signed)
+            TYNYINT     1               -128                    127
+            SMALLINT    2               -32768                  32767
+            MEDIUMINT   3               -8388608                8388607
+            INT         4               -2147483648             2147483647
+            BIGINT      8               -2^63                   2^63 -1
+
+        We can explicity make a data type an unsigned integer by adding the keyword UNSIGNED while creating the integer.
+
+        Text data types:
+            CHAR(M)
+            VARCHAR(M)
+            TEXT (for large text):
+                TYNYTEXT, TEXT, MEDIUMTEXT, LONGTEXT.
+            BLOB
+            ENUM
+            SET
+        
+        Data types for storing dates and times:
+            DATE, YEAR, TIME(fsp), DATETIME(fsp), TIMESTAMP(fsp).
+        
+        Real Numbers        Size(in Bytes)
+        FLOAT               4
+        DOUBLE PRECISION    8
+        
+        Fixed precision type: With this, we would specify the number of digits in the number to be represented, and the number of digits after the decimal point.
+            Example: DECIMAL(6,3)
 
 
+        CREATE DATABASE `database_name`;
+        Creating tables:
+            Example:
+                CREATE TABLE `cards` (
+                    `id` INT AUTO_INCREMENT,
+                    PRIMARY KEY(`id`)
+                );
+            Example:
+                CREATE TABLE `stations` (
+                    `id` INT AUTO_INCREMENT,
+                    `name` VARCHAR(32) NOT NULL UNIQUE,
+                    `line` ENUM('blue', 'green', 'orange', 'red') NOT NULL,
+                    PRIMARY KEY(`id`)
+                );
+            Example:
+                CREATE TABLE `swipes` (
+                    `id` INT AUTO_INCREMENT,
+                    `card_id` INT,
+                    `station_id` INT,
+                    `type` ENUM('enter', 'exit', 'deposit') NOT NULL,
+                    `datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    `amount` DECIMAL(5,2) NOT NULL CHECK(`amount` != 0),
+                    PRIMARY KEY(`id`),
+                    FOREIGN KEY(`station_id`) REFERENCES `stations`(`id`),
+                    FOREIGN KEY(`card_id`) REFERENCES `cards`(`id`)
+                );
+        
+        Altering Tables:
+            Example:
+                ALTER TABLE `stations` 
+                MODIFY `line` ENUM('blue', 'green', 'orange', 'red', 'silver') NOT NULL;
+            
+        Store Procedures:
+            Store procedures are a way to automate SQL statements and run them repeatedly.
+            See the hole example and explination at the lecture, to understand better.
+            CREATE PROCEDURE `procedure_name`()
+            BEGIN
+            ...
+            END;
 
+        Stored Procedures with Parameters:
+            Same here, see the lecture to understand.
+            CREATE PROCEDURE `porcedure_name`(parameters)
+            BEGIN
+            ...
+            END;
+            We can use here:
+                IF; ELSEIF; ELSE
+                LOOP
+                REPEAT
+                WHILE
+                ...
 
- 
