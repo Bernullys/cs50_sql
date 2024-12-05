@@ -648,6 +648,7 @@ Lecture 6 - Scaling.
             USE database_name;
             SHOW TABLES;
             DESCRIBE `table_name`;
+            CREATE USER 'user_name' IDENTIFIED BY 'password';
 
         Type in the terminal:
             mysql -u root -h 127.0.0.1 -P 3306 -p (I set a password to enter this way).
@@ -658,6 +659,7 @@ Lecture 6 - Scaling.
         
         MySQL does have data types, like INT and VARCHAR but unlike SQLite, it will not allow us to enter data of a different type and try to convert it.
 
+        Integer data types:
         Size and Range of numbers we can store in each of the integer types:
             Data Type   Size(in Bytes)  Minimum Value (signed)  Maximum Value (signed)
             TYNYINT     1               -128                    127
@@ -668,17 +670,25 @@ Lecture 6 - Scaling.
 
         We can explicity make a data type an unsigned integer by adding the keyword UNSIGNED while creating the integer.
 
-        Text data types:
+        Strings data types:
             CHAR(M)
             VARCHAR(M)
+        
+        Text data types:
             TEXT (for large text):
                 TYNYTEXT, TEXT, MEDIUMTEXT, LONGTEXT.
+
+        Others data types:
             BLOB
             ENUM
             SET
         
         Data types for storing dates and times:
-            DATE, YEAR, TIME(fsp), DATETIME(fsp), TIMESTAMP(fsp).
+            DATE 
+            YEAR 
+            TIME(fsp)           fsp = fractional seconds precision
+            DATETIME(fsp)
+            TIMESTAMP(fsp)
         
         Real Numbers        Size(in Bytes)
         FLOAT               4
@@ -716,6 +726,9 @@ Lecture 6 - Scaling.
                 );
         
         Altering Tables:
+            ALTER TABLE `table_name`
+            MODIFY ...;
+
             Example:
                 ALTER TABLE `stations` 
                 MODIFY `line` ENUM('blue', 'green', 'orange', 'red', 'silver') NOT NULL;
@@ -741,3 +754,89 @@ Lecture 6 - Scaling.
                 WHILE
                 ...
 
+    PostgreSQL:
+
+        Some commands:
+            (Look out how to install and log).
+            \l      to view all the databases.
+            \c "database_name" to connect to a specific database.
+            \dt to list out all the tables in a database.
+            \d "table_name" to describe a table.
+
+        Integer data types:
+        Data Type       Size(Bytes)     Minimum Value(signed)       Maximum Value (signed)
+        SMALLINT        2               -32768                      32767
+        INT             4               -2147483648                 2147483647
+        BIGINT          8               -2^63                       2^63 -1
+
+        Serial data types: Serials are also integers, but they are serial numbers, usually used for primary keys.
+        SMALLSERIAL
+        SERIAL
+        BIGSERIAL
+
+        Look out for others data types: some are very similar to MySql.
+            VARCHAR(M)
+            ENUM(...,...)
+            TIMESTAMP(p)        p = precision
+            DATE
+            TIME(p)
+            INTERVAL(p)
+            MONEY
+            NUMERIC(precision, scale)
+
+        To create a database:
+            CREATE DATABASE "database_name";
+        
+        To create tables:
+            CREATE TABLE "table_name" (
+                "colum_name" Constraints,
+                ...
+            );
+    
+    Scaling.
+        Vertical Scaling:
+            Increasing capacity by increasing a server's computing power.
+        Horizontal Scaling:
+            Increasing capacity by distributing load across multiple servers. When we scale horizontally, we keep copies of our database on multiple servers (replication).
+        Replication:
+            Keeping copies of a database on multiple servers.
+            There are several models of replication, but these three are the main ones:
+                Single-leader.
+                Multi-leader.
+                Leaderless.
+            
+            Read Replica:
+                A copy of a database from which data may only be read. This is used on single-leader model of replication.
+            
+            Synchronous replication:
+                Once the leader processes a write request, it could wait for the followers to replicate changes before doing anything else.
+                While this ensures the database is always consistent, it may be too slow in responding to queries. In applications like finance or healthcare, where data consistency is extremely important, we might choose this kind of communication despite the disadvantages.
+            Asynchronous replication:
+                The leader communicates with follower databases asynchronously to ensure chaanges are replicated. This method could be used in social media applications, where speed of response is extremely important.
+        
+        Sharding:
+            This involves splitting the database into shards across multiple database servers. A word of caution with sharding: we want to avoid having a database hotspot, or a database server that becomes more frequently accessed than others. This could create an overload on that server. Also sharding without replication, if one of the servers goes down, we will have an incomplete database. This creates a single point of failure: if one system goes down, or entire system is not usable.
+
+    
+    Access Control: (MySQL)
+        CREATE USER 'user_name' IDENTIFIED BY 'password';
+        GRANT privilege ON `database_name`.`table_name` TO 'user_name'; 
+        REVOKE privilege ON `database_name`.`table_name` FROM 'user_name'; 
+
+        privilege can be: ALL, CREATE, INSERT, SELECT, UPDATE, DELETE ...
+    
+    SQL Injection Attacks:
+        This involves a malicious user injecting somo SQL phrases to complete an existing query within our application in an undesirable way.
+
+    Prepared Statements:
+        Is a statement in SQL that we can later insert values into.
+        PREPARE `statement_name` FROM 'statement';
+
+        Example:
+            PREPARE `balance_check` FROM 'SELECT * FROM `accounts` WHERE `id` = ?';
+            The question mark in the prepared statement acts as a safeguard against the unintended execution of SQL code.
+
+        SET @id = 1;
+        EXECUTE `balance_check` USING @id;
+
+        In the above code, imagine the SET statement to be procuring the user's ID through the application! The @ is a canvention for variables in MySQL.
