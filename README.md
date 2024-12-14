@@ -268,6 +268,7 @@ Lecture 2 - Disigning
         Real: decimal or floating point numbers
         Text: characters or strings
         Blob: Binary Large Object, for storing objects in binary (useful for images, audio etc.)
+        Any
         A storage class can hold several data types.
         For example, these are the data types that fall under the umbrella of the Integer storage class:
             INTEGER:
