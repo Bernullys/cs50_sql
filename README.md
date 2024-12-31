@@ -471,7 +471,7 @@ Lecture 4 - Viewing
 
     Views:
         A View is a virtual table defined by a query. This new table can be queried later on.
-        View re useful for:
+        Views are useful for:
             Simplifying: putting together data fron different tables to be required more simply.
             Aggregating: running aggregate functions, like finding the sum, and storing the results.
             Partitioning: dividing data into logical pieces.

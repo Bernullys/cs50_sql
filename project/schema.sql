@@ -23,7 +23,7 @@ CREATE TABLE "communal_rooms" (
 -- Contains the people who owns a department(s)
 CREATE TABLE "owners" (
     "id" INTEGER,
-    "name" TEXT NOT NULL,
+    "first_name" TEXT NOT NULL,
     "last_name" TEXT NOT NULL,
     "email" TEXT NOT NULL UNIQUE,
     "phone_number" TEXT NOT NULL UNIQUE,
@@ -44,10 +44,9 @@ CREATE TABLE "departments" (
 -- Contains the devices which takes register of electrical consumtions of communal rooms
 CREATE TABLE "communal_divices" (
     "id" INTEGER,
-    "type" TEXT NOT NULL CHECK("single_phase", "direct_triphasic", "indirect_triphasic"),
+    "type" TEXT NOT NULL CHECK("type" IN ('single_phase', 'direct_triphasic', 'indirect_triphasic')),
     "serial_number" INTEGER NOT NULL UNIQUE,
     "room_id" INTEGER NOT NULL,
-    "building_id" INTEGER NOT NULL,
     PRIMARY KEY("id"),
     FOREIGN KEY("room_id") REFERENCES "communal_rooms"."id",
     FOREIGN KEY("building_id") REFERENCES "buildings"."id"
@@ -56,10 +55,9 @@ CREATE TABLE "communal_divices" (
 -- Contains the devices which takes register of electrical consumtions of departments
 CREATE TABLE "departments_divices" (
     "id" INTEGER,
-    "type" TEXT NOT NULL CHECK("single_phase", "direct_triphasic", "indirect_triphasic"),
-    "serial_number" INTEGER NOT NULL UNIQUE,
+    "type" TEXT NOT NULL CHECK("type" IN ('single_phase', 'direct_triphasic', 'indirect_triphasic')),
+    "serial_number" TEXT NOT NULL UNIQUE,
     "department_id" INTEGER NOT NULL,
-    "building_id" INTEGER NOT NULL,
     PRIMARY KEY("id"),
     FOREIGN KEY("department_id") REFERENCES "departments"."id",
     FOREIGN KEY("building_id") REFERENCES "buildings"."id"
@@ -69,7 +67,7 @@ CREATE TABLE "departments_divices" (
 CREATE TABLE "communal_electrical_parameters" (
     "id" INTEGER,
     "divice_id" INTEGER NOT NULL,
-    "energy_consuption" REAL NOT NULL,
+    "energy_consumption" REAL NOT NULL,
     "voltage" REAL NOT NULL,
     "current" REAL NOT NULL,
     "frecuency" REAL NOT NULL,
@@ -83,7 +81,7 @@ CREATE TABLE "communal_electrical_parameters" (
 CREATE TABLE "departments_electrical_parameters" (
     "id" INTEGER,
     "divice_id" INTEGER NOT NULL,
-    "energy_consuption" REAL NOT NULL,
+    "energy_consumption" REAL NOT NULL,
     "voltage" REAL NOT NULL,
     "current" REAL NOT NULL,
     "frecuency" REAL NOT NULL,
@@ -99,9 +97,9 @@ CREATE TABLE "communal_bills" (
     "year" TEXT NOT NULL,
     "month_energy_consumption" REAL NOT NULL,
     "total_energy_consumption" REAL NOT NULL,
-    "communal_room_divece_id" INTEGER NOT NULL,
+    "communal_room_divice_id" INTEGER NOT NULL,
     PRIMARY KEY("id"),
-    FOREIGN KEY("communal_room_device_id") REFERENCES "communal_electrical_parameters"."divice_id"
+    FOREIGN KEY("communal_room_divice_id") REFERENCES "communal_electrical_parameters"."divice_id"
 );
 
 -- Contains the bills for the energy consuption of all departments
@@ -111,7 +109,17 @@ CREATE TABLE "departments_bills" (
     "year" TEXT NOT NULL,
     "month_energy_consumption" REAL NOT NULL,
     "total_energy_consumption" REAL NOT NULL,
-    "department_divece_id" INTEGER NOT NULL,
+    "department_divice_id" INTEGER NOT NULL,
     PRIMARY KEY("id"),
-    FOREIGN KEY("department_device_id") REFERENCES "departments_electrical_parameters"."divice_id"
+    FOREIGN KEY("department_divice_id") REFERENCES "departments_electrical_parameters"."divice_id"
 );
+
+-- Create Views to simplified queries on specific bill by owners details
+
+CREATE VIEW "bill_by_owner" AS
+SELECT * FROM "departments_bills"
+JOIN "departments_electrical_parameters" ON "departments_electrical_parameters"."divice_id" = "departments_bills"."department_divice_id"
+JOIN "departments_divices" ON "departments_divices"."id" = "departments_electrical_parameters"."divice_id"
+JOIN "departments" ON "departments"."id" = "departments_divices"."department_id"
+JOIN "owners" ON "owners"."owner_id" = "departments"."owner_id"
+WHERE "owner"."first_name" = 'Bernardo' AND "owner"."last_name" = 'Dávila';
