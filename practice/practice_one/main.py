@@ -29,6 +29,14 @@ INSERT INTO users (name, age, email)
 VALUES (?, ?, ?)
 """, (name, age, email))
 
+# Second way to insert data into the Table:
+# cursor_commands.execute(
+#     """
+# INSERT INTO users
+# VALUES (:name, :age, :email)
+# """, { "name": name, "age": age, "email": email}
+# )
+
 # Commit the transaction and close the connection:
 db_connection.commit()
 db_connection.close()
