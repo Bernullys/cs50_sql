@@ -32,12 +32,17 @@ Lecture 0. Introduction / Querying
                 - Install sqlite3 in my WSL using sudo apt install sqlite3.
                 - In VSC install SQLite.
                 - SQLite Viewer (It got installed localy).
-                - Now I can run in the Terminal: sqlite3 database_name.db and will go to the sqlite enviroment. To exit use the command .quit.
+                - Now I can run in the Terminal: sqlite3 database_name.db and will go to the sqlite enviroment. To exit use the
+                command .quit.
                 - Then I can type the SQL code.
-                - This command: cat file_name.sql | sqlite3 database_name.db > output.txt will run directly in the Terminal the SQL code in file_name.sql and put the output in a file called output.txt.
+                - This command: cat file_name.sql | sqlite3 database_name.db > output.txt will run directly in the Terminal the
+                SQL code in file_name.sql and put the output in a file called output.txt.
 
     LIMIT keyword limit the number of rows to output.
-    SELECT "column1", FROM "database" LIMIT 5;
+    SELECT "column1", FROM "database" 
+    LIMIT 5;
+
+    LIMIT can accept two arguments. The first one is from which row starts and the second is the limit.
 
     WHERE keyword is used to select rows based on condition. Conditions could be = , !=, <> (also not equal).
     SELECT "column1", FROM "database" WHERE "column1" = 'value';
@@ -97,6 +102,8 @@ Lecture 0. Introduction / Querying
     SELECT ROUND(AVG("rating"), 2) AS "average rating"
     FROM "longlist";
 
+    AS keyword can be ommited. Is implicit.
+
     SELECT COUNT(*) FROM "longlist"; will output the number of rows of the table.
 
     DISTINCT keyword returns distincts results.
@@ -111,15 +118,14 @@ Lecture 1 - Relating
     Many to many.
 
     Entity ralationship diagrams (ER Diagrams).
-    0         Zero.
-    +         One.
-    arrow     Many.
+    In the project desription is a link where we can design ERD images.
 
     Keys
     Is an identifier that is unique for every item in a table.
 
     Foreing Keys
-    Is a primary key taken from a different table. By referencing the primary key of a different table, it helps relate tha tables by forming a link between them.
+    Is a primary key taken from a different table. By referencing the primary key of a different table,
+    it helps relate the tables by forming a link between them.
 
 
     Subqueries
@@ -232,7 +238,7 @@ Lecture 1 - Relating
 
 Lecture 2 - Disigning
 
-    SQLLite command (not keyword) .schema shows how a data base was created.
+    SQLite command (not keyword) .schema shows how a data base was created.
     .schema table_name will show only the schema of that table.
 
     Creating a Database Schema:
@@ -242,14 +248,16 @@ Lecture 2 - Disigning
         What types of data we should put in each of those columns.
 
     Normalizing:
-    The process of separating our data is called normalizing. When normalizing we put each entity in its own table. Any specific entity, goes into the entity's own table.
+    The process of separating our data is called normalizing. When normalizing we put each entity
+    in its own table. Any specific entity, goes into the entity's own table.
 
     Relating:
     We have to decide how our entities are related.
     We can also use an ER diagram to represesnt this relationship.
 
     CREATE TABLE
-    To create a table I have to type sqlite3 database_name.db. This will create a file called data_base.db. Then we have to read the schema.sql file which contains the commands to create tables.
+    To create a table I have to type sqlite3 database_name.db. This will create a file called data_base.db.
+    Then we have to read the schema.sql file which contains the commands to create tables.
     Don't work using touch database_name.db.
     And then the command CREATE TABLE... is typed in the command line.
 
@@ -259,7 +267,8 @@ Lecture 2 - Disigning
         ...>     "line"
         ...> );
 
-    Then we create a table to relate entities. These tables are often called junction tables, associative entities or join tables.
+    Then we create a table to relate entities. These tables are often called junction tables, associative entities
+    or join tables.
 
     Data Types and Storage Classes:
     SQLite has five storage classes:
@@ -279,25 +288,32 @@ Lecture 2 - Disigning
                 4-byte integer
                 6-byte integer
                 8-byte integer
-    SQLite takes care of storing the input value under the right data type. In other words, we as programmers only need to choose a storage class and SQLite will do the rest!
+    SQLite takes care of storing the input value under the right data type. In other words, we as programmers
+    only need to choose a storage class and SQLite will do the rest!
 
     A workaround could be to use 0 or 1 integer values to represent booleans.
 
     Type Affinities:
      It is possible to specify the data type of a column while creating a table.
-    However, columns in SQLite don’t always store one particular data type. They are said to have type affinities, meaning that they try to convert an input value into the type they have an affinity for.
-    The five type affinities in SQLite are: Text, Numeric (either integer or real values based on what the input value best converts to), Integer, Real and Blob.
-    Consider a column with a type affinity for Integers. If we try to insert “25” (the number 25 but stored as text) into this column, it will be converted into an integer data type.
-    Similarly, inserting an integer 25 into a column with a type affinity for text will convert the number to its text equivalent, “25”.
+    However, columns in SQLite don’t always store one particular data type. They are said to have type affinities,
+    meaning that they try to convert an input value into the type they have an affinity for.
+    The five type affinities in SQLite are: Text, Numeric (either integer or real values based on what the input
+    value best converts to), Integer, Real and Blob.
+    Consider a column with a type affinity for Integers. If we try to insert “25” (the number 25 but stored as text)
+    into this column, it will be converted into an integer data type.
+    Similarly, inserting an integer 25 into a column with a type affinity for text will convert the number to its text
+    equivalent, “25”.
 
     Adding Types to our Tables:
-    Command to delete tables: DROP TABLE "table_name";
+    Command to delete tables:
+    DROP TABLE "table_name";
     (Whatch schema.sql file).
 
     Table Constraints:
     We can use table constraints to impose restrictions on certain values in our tables.
     For example, a primary key column must have unique values. The table constraint we use for this is PRIMARY KEY.
-    Similarly, a constraint on a foreign key value is that it must be found in the primary key column of the related table! This table constraint is called, predictably, FOREIGN KEY.
+    Similarly, a constraint on a foreign key value is that it must be found in the primary key column of the related table!
+    This table constraint is called, predictably, FOREIGN KEY.
 
     Column Constraints:
     A column constraint is a type of constraint that applies to a specified column in the table.
@@ -367,12 +383,15 @@ Lecture 3 - Writing
         Data could also be stored in a csv format.
         First we have to start from zero, create a database file and import the file we the data:
             .import --csv --skip 1 csv_file.csv table_name
-            --skip 1 is to avoid adding the first row of the csv file but this is when we already have the table with the column names.
+            --skip 1 is to avoid adding the first row of the csv file but this is when we already have the
+            table with the column names.
         
-        If we have a data form in a csv without an id column, we can do it in a different way. We will to use a temporary table:
+        If we have a data form in a csv without an id column, we can do it in a different way. We will use 
+        a temporary table:
             .import --csv csv_file.csv temporary_table
             This time we won't need to skip line 1 because this way is reconized as the column names.
-        Next, we will select the data(without primary keys) from temporary_table and move it to out table_name, which was the goal all along.
+        Next, we will select the data(without primary keys) from temporary_table and move it to out table_name,
+        which was the goal all along.
         We can do:
             INSERT INTO "table_name" ("column1", ...)
             SELECT "column1", ... FROM "temporary_table";
@@ -396,17 +415,27 @@ Lecture 3 - Writing
             DELETE FROM "collections"
             WHERE "acquired" < '1909-01-01';
 
-        There might be cases where deleting some data could impact the integrity of a database. Foreign key constrains are a good example. A foreign key column references the primary key of a different table. If we were to delete the primary key, the foreign key column would have nothing to reference. Traying to delete this we get an error. This error notifies us that deleting this data would violate the foring key constraint set up in the table.
-        One possibility is to delete the corresponding rows from the connections_table and then deleting from the other table.
+        There might be cases where deleting some data could impact the integrity of a database. Foreign key 
+        constrains are a good example. A foreign key column references the primary key of a different table. If we 
+        were to delete the primary key, the foreign key column would have nothing to reference. Traying to delete
+        this we get an error. This error notifies us that deleting this data would violate the foring key constraint
+        set up in the table.
+        One possibility is to delete the corresponding rows from the connections_table and then deleting from the other
+        table.
 
-        In another possibility, we can specify the action to be taken when an ID referenced by a foreign key is deleted. To do this, we use the keyword ON DELETE followed by the action to be taken.
+        In another possibility, we can specify the action to be taken when an ID referenced by a foreign key is deleted.
+        To do this, we use the keyword ON DELETE followed by the action to be taken.
             ON DELETE RESTRICT: This restricts us from deleting IDs when the foreign key constraint is violated.
             ON DELETE NO ACTION: This allows the deletion of IDs that are referenced by a foreign key and nothing happens.
-            ON DELETE SET NULL: This allows the deletion of IDs that are referenced by a foreign key and sets the foreign key references to NULL.
+            ON DELETE SET NULL: This allows the deletion of IDs that are referenced by a foreign key and sets the foreign
+            key references to NULL.
             ON DELETE SET DEFAULT: This does the same as the previous, but allows us to set a default value instead of NULL.
-            ON DELETE CASCADE: This allows the deletion of IDs that are referenced by a foreign key and also proceeds to cascadingly delete the referencing foreign key rows. 
-            For example, if we used this to delete an artist ID, all the artist’s affiliations with the artwork would also be deleted from the table. 
-            Example: (This is does when Designing the Tables, is a constrains)
+            ON DELETE CASCADE: This allows the deletion of IDs that are referenced by a foreign key and also proceeds to
+            cascadingly delete the referencing foreign key rows. 
+            For example, if we use this to delete an artist ID, all the artist’s affiliations with the artwork would also be
+            deleted from the table.
+
+            Example: (This is done when Designing the Tables, is a constrains)
                 FOREIGN KEY("artist_id") REFERENCES "artists"("id") ON DELETE CASCADE
                 FOREIGN KEY("collection_id") REFERENCES "collections"("id") ON DELETE CASCADE
 
@@ -457,14 +486,16 @@ Lecture 3 - Writing
 
     Solf deletions:
 
-        Is a tecnique to don't delete data, instead we update data and we add a column where we can keep track of the data we mark as deleted. Then we could select the data deleted or not if we want.
+        Is a tecnique to don't delete data, instead we update data and we add a column where we can keep track of
+        the data we mark as deleted. Then we could select the data deleted or not if we want.
 
     
-    NOTE:   terminal command that is handy when we want to run a sql file which has a command that are not sqlite code (like problem Meteorite Cleaning).
+    NOTE: terminal command that is handy when we want to run a sql file which has a command that are not sqlite code
+    (like problem Meteorite Cleaning).
             cat file_name.sql | sqlite3 data_base_name.db
             cat file_name.sql outputs the data in file_name.sql.
-            sqlite3 data_base_name.db opens a file called data_base_name.db with the sqlite3 engine, as you’re already familiar with.
-
+            sqlite3 data_base_name.db opens a file called data_base_name.db with the sqlite3 engine, as we’re already
+            familiar with.
 
 
 Lecture 4 - Viewing
@@ -500,7 +531,8 @@ Lecture 4 - Viewing
             Is basicly the same code but using aggregation functions.
 
         Common Table Expression (CTE):
-            A regular view exists forever in our database. A temporary view exist for the duration of our connection with the database. A CTE is a view that exist for a single query alone.
+            A regular view exists forever in our database. A temporary view exist for the duration of our connection
+            with the database. A CTE is a view that exist for a single query alone.
             A CTE is defined by a query and can be used in a query.
             This is the form:
 
@@ -519,19 +551,26 @@ Lecture 4 - Viewing
                 GROUP BY "year";
 
         Partioning:
-            With the same approach has simplifying and aggregating but to our conviniance we can partion tables to be better manipulated.
+            With the same approach as simplifying and aggregating but to our conviniance we can partion tables
+            to be better manipulated.
         
         Securing:
-            Some information in tables could be categorized as Personally Identifiable Information (PII) which companies are not allowed to share indiscriminately.
-            We can create a view that does not contains this type of information but SQLite3 does not allow access control. This means that someone simply query the original table and see all the information.
+            Some information in tables could be categorized as Personally Identifiable Information (PII) which
+            companies are not allowed to share indiscriminately.
+            We can create a view that does not contains this type of information but SQLite3 does not allow access
+            control. This means that someone simply query the original table and see all the information.
+            
             Example:
                 CREATE VIEW "analysis" AS
                 SELECT "id", "origin", "destination", 'Anonymous' AS "rider"
                 FROM "rides";
 
         Solf Deletions:
-            As we saw in previous weeks, a solf deletion involves marking a row as deleted insted of removing it from the table.
-            We can create a view that shows only the rows that are not marked as deleted. And had that view which will be showing the rows which aren't mark as deleted in the real table with each solf deletion.
+            As we saw in previous weeks, a solf deletion involves marking a row as deleted insted of removing it
+            from the table.
+            We can create a view that shows only the rows that are not marked as deleted. And had that view which
+            will be showing the rows which aren't mark as deleted in the real table with each solf deletion.
+            
             Example:
                 CREATE VIEW "current_collections" AS
                 SELECT "id", "title", "accession_number", "acquired"
