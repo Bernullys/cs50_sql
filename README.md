@@ -236,7 +236,7 @@ Lecture 1 - Relating
     HAVING "average rating" > 4.0
     ORDER BY "average rating" DESC;
 
-Lecture 2 - Disigning
+Lecture 2 - Designing
 
     SQLite command (not keyword) .schema shows how a data base was created.
     .schema table_name will show only the schema of that table.
@@ -606,49 +606,62 @@ Lecture 4 - Viewing
 
 Lecture 5 - Optimizing.
 
-    SqLite has a command .timer on that enable us to time our queries.
+    SqLite has a command .timer which enable us to time our queries.
     To find the size of a database on the terminal, we can use a Unix command: du -b database_name.db
 
     Index.
         The same way that textbooks often have an index, databases tables can have an index as well.
-        An index is a structure used to speed uo the retrieval of rows from a table.
+        An index is a structure used to speed up the retrieval of rows from a table.
         Index's comes with trade-offs with space and the time it takes to later insert data into tables.
         To create an index:
             CREATE INDEX "index_name" ON "table_name" ("column_name", ...);
 
         Index across Multiple Tables.
-        To understand what kind of index could help speed this query up, we can run EXPLAIN QUERY PLAB ahead of the query.
+        To understand what kind of index could help speed this query up, we can run EXPLAIN QUERY PLAB
+        ahead of the query.
             EXPLAIN QUERY PLAN
             SELECT ...; (nested queries).
-            When we run explain query plan we can see if the queries and sub queries are done by search or scan. Scan is slower so the idea is to add indexes to the queries which are on scans.
+            When we run explain query plan we can see if the queries and sub queries are done by search
+            or scan. Scan is slower so the idea is to add indexes to the queries which are on scans.
         
         Covering Index: An index in which queried data can be retrived from the index itself.
-        A covering index is a special type of index that includes all columns needed for the query. This means the database can fulfill the query directly from the index without having to look up additional data in a table.
+        A covering index is a special type of index that includes all columns needed for the query. This
+        means the database can fulfill the query directly from the index without having to look up additional
+        data in a table.
 
         Space Trade-off.
-            Indexes seem incredibly helpful, but there are trade-off associated - they occupy additional space in the database, so while we gain query speed, we do lose space.
-            An index is stored un a database as a data structure called a B-Tree, or balanced tree.
+            Indexes seem incredibly helpful, but there are trade-off associated - they occupy additional space
+            in the database, so while we gain query speed, we do lose space.
+            An index is stored in a database as a data structure called a B-Tree, or balanced tree.
         TIme Trade-off.
-            Similar to the space trade-off, it also takes longer to insert data into a column and then add it ti an index. Each time a value is added to the index, the B-tree needs to be traversed to figure out where the value should be added.
+            Similar to the space trade-off, it also takes longer to insert data into a column and then add it to
+            an index. Each time a value is added to the index, the B-tree needs to be traversed to figure out where
+            the value should be added.
         
     Partial Index.
-        This is an index that includes only a subset of rows from a table, allowing us to save some space that a full index would occupy.
-        This is especially useful when we know thet users query only a subset of rows fron the table.
+        This is an index that includes only a subset of rows from a table, allowing us to save some space that a
+        full index would occupy.
+        This is especially useful when we know the users query only a subset of rows fron the table.
         Example:    CREATE INDEX "recents" ON "movies" ("titles")
                     WHERE "year" = 2023;
 
     Vaccum.
-        There are ways to delete unused space in out database. Sqlite allows us to "vacuum" data -  this cleans up previously deleted data (that is actually no deleted, but just marked as space being available for the next INSERT).
+        There are ways to delete unused space in out database. Sqlite allows us to "vacuum" data -  this cleans up
+        previously deleted data (that is actually no deleted, but just marked as space being available for the next
+        INSERT).
         Run:
             VACCUM;
         
     Concurrency.
-        Concurrency is the simultaneous handling of multiple queries or interactions by the database. Imagine a database for a website, or a finalcial service, that gets a ot of trafficat the same time. Concurrency is particulary important in these cases.
+        Concurrency is the simultaneous handling of multiple queries or interactions by the database. Imagine a database
+        for a website, or a finalcial service, that gets a lot of traffic at the same time. Concurrency is particulary
+        important in these cases.
 
         Transactions.
             A unit of work in a database.
             A transaction is a sequence of operations that are executed as a single, all-or-nothing unit.
-            If any part of the transaction fails, the entire transaction is rolled back and the database is returned to its previous state.
+            If any part of the transaction fails, the entire transaction is rolled back and the database is returned
+            to its previous state.
             This is useful for ensuring data consistency and integrity.
             Transactions have some properties, which can be remembered using the acronym ACID:
                 Atomicity: can't be broken down into smaller pieces.
@@ -666,22 +679,28 @@ Lecture 5 - Optimizing.
             
             Race Conditions:
                 A transaction can help guard against race conditions.
-                A race condition occurs when multiple entities simultaneously acces and make decisions based on a shared value, potentially causing inconsistencies in the database.
-                To make transactions sequential, SQLite and other database management systems use locks on databases. A table in a database could be in a few different states:
+                A race condition occurs when multiple entities simultaneously acces and make decisions based on a
+                shared value, potentially causing inconsistencies in the database.
+                To make transactions sequential, SQLite and other database management systems use locks on databases.
+                A table in a database could be in a few different states:
                     UNLOCKED: this is the default state when no user is accessing the database.
-                    SHARED: when a transaction is reading data from the database, it obtains shared lock that allows other trasactions to read simultaneously from the database.
-                    EXCLUSIVE: if a transaction needs to write or update data, it obtains an exclusive lock on the database that does not allow other transactions to occur at the same time (no even a read).
+                    SHARED: when a transaction is reading data from the database, it obtains shared lock that allows
+                    other trasactions to read simultaneously from the database.
+                    EXCLUSIVE: if a transaction needs to write or update data, it obtains an exclusive lock on the
+                    database that does not allow other transactions to occur at the same time (no even a read).
                     SQLite can lock a database with this command:
                         BEGING EXCLUSIVE TRANSACTION; This way no one could access to the database because is lock.
 
 Lecture 6 - Scaling.
 
-    Scalability us the ability to increase or decrease the capacity of an application or database to meet demand.
+    Scalability is the ability to increase or decrease the capacity of an application or database to meet demand.
 
     MySQL.
         I have to install it with: sudo apt install mysql-server.
         I can go into mysql enviroment using: sudo mysql.
-        Also I can do: cat /etc/mysql/debian.cnf, and find the debian password and go in with that using: mysql -u debian-sys-maint -p.
+        Also I can do: 
+        cat /etc/mysql/debian.cnf
+        and find the debian password and go in with that using: mysql -u debian-sys-maint -p.
 
         Commands: 
             SHOW DATABASES; There will be default databases in the server.
@@ -692,12 +711,19 @@ Lecture 6 - Scaling.
 
         Type in the terminal:
             mysql -u root -h 127.0.0.1 -P 3306 -p (I set a password to enter this way).
-                -u indicates the user. We provide the user we want to connect to the database as — root (synonymous with database admin, in this case).
+                -u indicates the user. We provide the user we want to connect to the database as — root 
+                (synonymous with database admin, in this case).
+                
                 127.0.0.1 is the address of local host on the internet (our own computer).
-                3306 is the port we want to connect to, and this is the default port where MySQL is hosted. Think of the combination of host and port as the address of the database we are trying to connect to!
+                
+                3306 is the port we want to connect to, and this is the default port where MySQL is
+                hosted. Think of the combination of host and port as the address of the database we are trying
+                to connect to!
+                
                 -p at the end of the command indicates that we want to be prompted for a password when connecting.
         
-        MySQL does have data types, like INT and VARCHAR but unlike SQLite, it will not allow us to enter data of a different type and try to convert it.
+        MySQL does have data types, like INT and VARCHAR but unlike SQLite, it will not allow us to enter data of
+        a different type and try to convert it.
 
         Integer data types:
         Size and Range of numbers we can store in each of the integer types:
@@ -708,7 +734,8 @@ Lecture 6 - Scaling.
             INT         4               -2147483648             2147483647
             BIGINT      8               -2^63                   2^63 -1
 
-        We can explicity make a data type an unsigned integer by adding the keyword UNSIGNED while creating the integer.
+        We can explicity make a data type an unsigned integer by adding the keyword UNSIGNED while creating
+        the integer.
 
         Strings data types:
             CHAR(M)
@@ -734,7 +761,8 @@ Lecture 6 - Scaling.
         FLOAT               4
         DOUBLE PRECISION    8
         
-        Fixed precision type: With this, we would specify the number of digits in the number to be represented, and the number of digits after the decimal point.
+        Fixed precision type: With this, we would specify the number of digits in the number to be represented, and
+        the number of digits after the decimal point.
             Example: DECIMAL(6,3)
 
 
@@ -837,7 +865,8 @@ Lecture 6 - Scaling.
         Vertical Scaling:
             Increasing capacity by increasing a server's computing power.
         Horizontal Scaling:
-            Increasing capacity by distributing load across multiple servers. When we scale horizontally, we keep copies of our database on multiple servers (replication).
+            Increasing capacity by distributing load across multiple servers. When we scale horizontally, we
+            keep copies of our database on multiple servers (replication).
         Replication:
             Keeping copies of a database on multiple servers.
             There are several models of replication, but these three are the main ones:
@@ -846,16 +875,25 @@ Lecture 6 - Scaling.
                 Leaderless.
             
             Read Replica:
-                A copy of a database from which data may only be read. This is used on single-leader model of replication.
+                A copy of a database from which data may only be read. This is used on single-leader model of
+                replication.
             
             Synchronous replication:
-                Once the leader processes a write request, it could wait for the followers to replicate changes before doing anything else.
-                While this ensures the database is always consistent, it may be too slow in responding to queries. In applications like finance or healthcare, where data consistency is extremely important, we might choose this kind of communication despite the disadvantages.
+                Once the leader processes a write request, it could wait for the followers to replicate changes
+                before doing anything else.
+                While this ensures the database is always consistent, it may be too slow in responding to queries.
+                In applications like finance or healthcare, where data consistency is extremely important, we might
+                choose this kind of communication despite the disadvantages.
             Asynchronous replication:
-                The leader communicates with follower databases asynchronously to ensure chaanges are replicated. This method could be used in social media applications, where speed of response is extremely important.
+                The leader communicates with follower databases asynchronously to ensure chaanges are replicated. This
+                method could be used in social media applications, where speed of response is extremely important.
         
         Sharding:
-            This involves splitting the database into shards across multiple database servers. A word of caution with sharding: we want to avoid having a database hotspot, or a database server that becomes more frequently accessed than others. This could create an overload on that server. Also sharding without replication, if one of the servers goes down, we will have an incomplete database. This creates a single point of failure: if one system goes down, or entire system is not usable.
+            This involves splitting the database into shards across multiple database servers. A word of caution
+            with sharding: we want to avoid having a database hotspot, or a database server that becomes more
+            frequently accessed than others. This could create an overload on that server. Also sharding without
+            replication, if one of the servers goes down, we will have an incomplete database. This creates a single
+            point of failure: if one system goes down, or entire system is not usable.
 
     
     Access Control: (MySQL)
@@ -866,7 +904,8 @@ Lecture 6 - Scaling.
         privilege can be: ALL, CREATE, INSERT, SELECT, UPDATE, DELETE ...
     
     SQL Injection Attacks:
-        This involves a malicious user injecting somo SQL phrases to complete an existing query within our application in an undesirable way.
+        This involves a malicious user injecting some SQL phrases to complete an existing query within our
+        application in an undesirable way.
 
     Prepared Statements:
         Is a statement in SQL that we can later insert values into.
@@ -874,9 +913,11 @@ Lecture 6 - Scaling.
 
         Example:
             PREPARE `balance_check` FROM 'SELECT * FROM `accounts` WHERE `id` = ?';
-            The question mark in the prepared statement acts as a safeguard against the unintended execution of SQL code.
+            The question mark in the prepared statement acts as a safeguard against the unintended execution
+            of SQL code.
 
         SET @id = 1;
         EXECUTE `balance_check` USING @id;
 
-        In the above code, imagine the SET statement to be procuring the user's ID through the application! The @ is a canvention for variables in MySQL.
+        In the above code, imagine the SET statement to be procuring the user's ID through the application!
+        The @ is a canvention for variables in MySQL.
