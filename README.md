@@ -378,7 +378,9 @@ Lecture 3 - Writing
         VALUES
         ("value1", ...),
         ("value2", ...),
-        ...;
+        (),
+        (),
+        ();
     
         Data could also be stored in a csv format.
         First we have to start from zero, create a database file and import the file we the data:
@@ -921,3 +923,43 @@ Lecture 6 - Scaling.
 
         In the above code, imagine the SET statement to be procuring the user's ID through the application!
         The @ is a canvention for variables in MySQL.
+
+MySQL Workbench.
+
+    CREATE DATABASE database_name;
+
+    DROP DATABASE database_name; Is the same to drop a table and to a column to.
+
+    To read only a database:
+    ALTER DATABASE database_name READ ONLY = 1;
+
+    To change read only:
+    ALTER DATABASE database_name READ ONLY = 0;
+
+    To crate tables on a specific DB I have to right click the DB and set
+    as default schema.
+
+    Rename table:
+    RENAME TABLE table_name TO new_table_name;
+
+    ALTER TABLE table_name
+    ADD column DataType;
+
+    To rename a column:
+    ALTER TABLE table_name
+    RENAME column_name TO new_name;
+
+    To modify a datatype:
+    ALTER TABLE table_name
+    MODIFY COLUMN column_name new_data_type;
+
+    Change the position of a column:
+    ALTER TABLE table_name
+    MODIFY column_n data_type
+    AFTER column_m;
+    If we want tha column to be first we can type directly FIRST.
+
+
+
+
+
