@@ -170,13 +170,17 @@ Lecture 1 - Relating
 
     JOIN keyword
     This keyword allows us to combine two or more tables together.
+
     SELECT * FROM "sea_lions"
     JOIN "migrations" ON "migrations"."id" = "sea_lions"."id";
 
-    Inner JOIN / Outer JOIN
-
-    LEFT JOIN       LEFT OUTER JOIN
-    RIGHT JOIN      RIGHT OUTER JOIN
+    INNER JOIN return colums that are the same on both tables. 
+    
+    OUTER JOIN returns all colums of the left or right. It work with this syntax:
+    (left is the from table)
+    LEFT JOIN    ===   LEFT OUTER JOIN
+    RIGHT JOIN   ===   RIGHT OUTER JOIN
+    
     FULL JOIN       
 
     NATURAL JOIN
@@ -186,6 +190,8 @@ Lecture 1 - Relating
     FROM "sea_lions"
     NATURAL JOIN "migrations";
 
+    We can join multiple tables together if we have comun colums between them.
+
 
     Sets
     Sets are tables that results from queries.
@@ -193,11 +199,23 @@ Lecture 1 - Relating
     SELECT 'author' AS "profession", "name" FROM "authors"; Important to know. OJO.
 
     UNION
+    UNION by default is UNION DISTINCT
+    But there is also UNION ALL which union everything
+
     SELECT 'author' AS "profession", "name"
     FROM "authors"
     UNION
     SELECT 'translator' AS "profession", "name"
     FROM "translators";
+
+    SELECT "first_name", "last_name", 'Old' AS "Label"
+    FROM "employee_demographics
+    WHERE age > 50
+    UNION
+    SELECT "first_name", "last_name", 'Highly Paid Employee' AS "Label"
+    FROM "employee_salary"
+    WHERE "salary" > 7000000
+    GROUP BY "first_name", "last_name";
 
     INTERSET
     SELECT "name" FROM "translators"
@@ -924,7 +942,7 @@ Lecture 6 - Scaling.
         In the above code, imagine the SET statement to be procuring the user's ID through the application!
         The @ is a canvention for variables in MySQL.
 
-MySQL Workbench.
+MySQL Workbench Notes from Bro Code.
 
     CREATE DATABASE database_name;
 
@@ -959,7 +977,105 @@ MySQL Workbench.
     AFTER column_m;
     If we want tha column to be first we can type directly FIRST.
 
+MySQL notes from Alex The Analyst:
+
+    String functions:
+        LENGTH('string_data')
+        Example:
+        SELECT first_name, LENGTH(first_name)
+        FROM table_name;
+
+        UPPER('sky') will return the string all captital
+        LOWER('SKY')
+        TRIM('     sky ')
+        LTRIM('sky      ')
+        RTRIM('   sky')
+
+        LEFT(first_name, n) where n is the number of characters at left.
+        RIGHT(first_name, n) where n is the number of characters at right.
+
+        SUBSTRING(first_name,p,n) where p is position and n is the number of characters to select.
+
+        SELECT first_name, REPLACE(first_name, 'a', 'b') replaces the character a with the b.
+
+        SELECT LOCATE('e', 'Bernardo') will return the index where is located
+        SELECT first_name, LOCATE('er', first_name) will return the number of er has the first_name
+
+        CONCAT returns the data of two columns in only one column.
+        SELECT first_name, last_name,
+        CONCAT(first_name, ' ' ,last_name)
+        FROM table_name;
+    
+    CASE Statements allow us to use logic
+
+        Examples:
+        SELECT first_name, last_name, age,
+        CASE
+            WHEN age <= 40 THEN 'Young'
+            WHEN age BETWEEN 41 and 70 THEN 'Old'
+            WHEN age >= 70 THEN 'Dont work'
+        END AS Age_Bracket
+        FROM employee_demographics;
 
 
+        SELECT first_name, last_name, salary, department_name,
+        CASE
+            WHEN salary <= 50000 THEN salary * 1.05
+            WHEN  salary > 50000 THEN salary * 1.07
+        END AS New_Salaries,
+        CASE
+            WHEN  department_name = 'Finance' THEN salary * 1.1
+        END AS Bonus
+        FROM employee_salary
+        JOIN parks_departments ON parks_departments.department_id = employee_salary.dept_id;
 
+    Window functions:
+        It's some like GROUP BY but don't return only a row but multiple
 
+        OVER()
+
+        Example: This will return the average over everything
+            SELECT gender, AVG(salary) OVER()
+            FROM employee_demographics dem
+            JOIN employee_salary salary ON dem.employee_id = sal.employee_id;
+
+            This will return the average by gender
+            SELECT gender, AVG(salary) OVER(PARTITION BY gender)
+            FROM employee_demographics dem
+            JOIN employee_salary salary ON dem.employee_id = sal.employee_id
+            GROUP BY gender;
+
+            This is useful when using other data and had the agregate value on each row.
+
+            SELECT dem.first_name, dem.last_name, gender,
+            SUM(salary) OVER(PARTITION BY gender)
+            FROM employee_demographics dem
+            JOIN employee_salary salary ON dem.employee_id = sal.employee_id;
+
+            rolling total application:
+
+            SELECT dem.first_name, dem.last_name, gender,
+            SUM(salary) OVER(PARTITION BY gender ORDER BY dem.employee_id) AS Rolling_total
+            FROM employee_demographics dem
+            JOIN employee_salary salary ON dem.employee_id = sal.employee_id;
+
+        ROW_NUMBER()
+
+            SELECT dem.employee_id, dem.first_name, dem.last_name, gender, salary,
+            ROW_NUMBER() OVER()   -- This is a column counting from one (similar to id)
+            FROM employee_demographics dem
+            JOIN employee_salary salary ON dem.employee_id = sal.employee_id;
+
+            SELECT dem.employee_id, dem.first_name, dem.last_name, gender, salary,
+            ROW_NUMBER() OVER(PARTITION BY gender ORDER BY salary DESC)
+            FROM employee_demographics dem
+            JOIN employee_salary salary ON dem.employee_id = sal.employee_id;
+
+        RANK() and DENSE_RANK
+
+            SELECT dem.employee_id, dem.first_name, dem.last_name, gender, salary,
+            ROW_NUMBER() OVER(PARTITION BY gender ORDER BY salary DESC) AS row_num, -- dont repeat
+            RANK() OVER(PARTITION BY gender ORDER BY salary DESC) AS rank_num,      -- repeat equals and leave space
+            DENSE_RANK() OVER(PARTITION BY gender ORDER BY salary DESC) AS dense_rank_num, -- repeat equals and dont leave space
+            FROM employee_demographics dem
+            JOIN employee_salary salary ON dem.employee_id = sal.employee_id;
