@@ -550,17 +550,19 @@ Lecture 4 - Viewing
         Aggregating:
             Is basicly the same code but using aggregation functions.
 
-        Common Table Expression (CTE):
+        CTEs - Common Table Expression:
             A regular view exists forever in our database. A temporary view exist for the duration of our connection
             with the database. A CTE is a view that exist for a single query alone.
             A CTE is defined by a query and can be used in a query.
             This is the form:
 
-                WITH "name" AS (
+                WITH "cte_name" AS (
                     SELECT ...
                 ), ...
-                SELECT ... FROM "name";
+                SELECT ... FROM "cte_name";
 
+            The idea is to make a table created with keyword WITH ... and then make a query:
+            
             Example:
                 WITH "average_book_ratings" AS (
                 SELECT "book_id", "title", "year", ROUND(AVG("rating"), 2) AS "rating" FROM "ratings"
@@ -569,6 +571,30 @@ Lecture 4 - Viewing
                 )
                 SELECT "year" ROUND(AVG("rating"), 2) AS "rating" FROM "average_book_ratings"
                 GROUP BY "year";
+
+            We can use CTE for readiability. It's a better way for Subqueries.
+            We can create more than 1 CTE like:
+
+                WITH "cte_name1" AS (
+                    all the queries
+                ),
+                "cte_name2" AS (
+                    all the others queries
+                )
+                SELECT *
+                FROM "cte_name1"
+                JOIN "cte_name2" ON "cte_name1"."some_id" = "cte_name2"."some_id";
+
+            Another thing we can do is set the alias of the CTE columns between parenthisis after the CTE name:
+
+                WITH "cte_example" ("Gender", "Salary") AS (
+                    SELECT COUNT("gender"), AVG("salary)
+                    ...
+                )
+                ...
+
+                This will named the colums of the output.
+
 
         Partioning:
             With the same approach as simplifying and aggregating but to our conviniance we can partion tables
@@ -1079,3 +1105,73 @@ MySQL notes from Alex The Analyst:
             DENSE_RANK() OVER(PARTITION BY gender ORDER BY salary DESC) AS dense_rank_num, -- repeat equals and dont leave space
             FROM employee_demographics dem
             JOIN employee_salary salary ON dem.employee_id = sal.employee_id;
+
+    Temporary tables:
+        We can use these tables while we have a session open.
+
+        This way if we are inserting data:
+
+        CREATE TEMPORARY TABLE table_name (
+            f_n VARCHAR(30),
+            l_n VARCHAR(30),
+            ...
+        )
+
+        But we can select part of data from another table:
+
+        CREATE TEMPORARY TABLE table_name
+        SELECT column1
+        FROM  existing_table
+        Where something_happen;
+
+    Stored Procedures: are way to save our SQL code and use it over and over again. It's like functions on other languages.
+
+        DELIMITER $$
+        CREATE PROCEDURE procedure_name()
+        BEGIN
+            SELECT ...
+            ... ;
+            SELECT ...
+            ... ;
+        END $$
+        DELIMITER ;
+
+        Then we can call the procedure:
+
+        CALL procedure_name();
+
+        We can create stored procedures in Workbench in that section.
+        Procedures like function can have parameters. The same way.
+
+    Triggers:
+
+        DELIMITER $$
+        CREATE TRIGGER trigger_name
+            AFTER/BEFORE INSERT/DELETE/UPDATE ON table_name
+            FOR EACH ROW
+        BEGIN
+            ... code of what we want to happen ...;
+        END $$
+        DELIMITER ;
+
+    Events:
+        Triggers happen when an event take place but an event take place when schedule.
+
+        Example: 
+
+        DELIMITER $$
+        CREATE EVENT event_name
+        ON SCHEDULE EVERY 30 SECOND
+        DO
+        BEGIN
+            DELETE
+            FROM table_name
+            WHERE column_n >= 100;
+        END $$
+        DELIMITER ;
+
+        To ensure the event is working:
+        SHOW VARIABLES LIKE 'event%';
+        And to ensure we have permission to delete or something in the Workbench we can check on Workbench Preferences.
+
+        
