@@ -1174,4 +1174,13 @@ MySQL notes from Alex The Analyst:
         SHOW VARIABLES LIKE 'event%';
         And to ensure we have permission to delete or something in the Workbench we can check on Workbench Preferences.
 
-        
+    Project Cleanind_data:
+
+        To duplicate a table with the same colums:
+            CREATE TABLE table_name
+            LIKE existing_table;
+        Then insert all the data:
+            INSERT table_name
+            SELECT *
+            FROM existing_table;
+            
