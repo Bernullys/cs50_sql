@@ -137,7 +137,7 @@ WHERE ls1.industry IS NULL
 AND ls2.industry IS NOT NULL;
 
 -- Let's check which values are null and we can't do anything about it so we could delete them:
--- We have to check if with the info we have we could populate data making calculusor something.
+-- We have to check if with the info we have we could populate data making calculus or something.
 -- I decided to delete all rows that have total_laid_off, percentage_laid_off and funds_raised_millions equals to null or blank.
 SELECT total_laid_off, percentage_laid_off, funds_raised_millions
 FROM layoffs_staging;
