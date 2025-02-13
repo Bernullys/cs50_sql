@@ -1003,6 +1003,15 @@ MySQL Workbench Notes from Bro Code.
     AFTER column_m;
     If we want tha column to be first we can type directly FIRST.
 
+    AUTOCOMMIT / COMMIT / ROLLBACK
+    By default autocommit is ON so every operation get save right away, but we can set autocommit off:
+    SET AUTOCOMMIT = OFF;
+    Then operations to be saved have to be commited manually:
+    COMMIT;
+    So if we want to go back to undo some operation, we can use:
+    ROLLBACK;
+
+
 MySQL notes from Alex The Analyst:
 
     String functions:
