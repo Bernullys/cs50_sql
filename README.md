@@ -1011,6 +1011,9 @@ MySQL Workbench Notes from Bro Code.
     So if we want to go back to undo some operation, we can use:
     ROLLBACK;
 
+    In built functions to take date, time and datatime values:
+    CURRENT_DATE(), CURRENT_TIME(), NOW()
+
 
 MySQL notes from Alex The Analyst:
 
