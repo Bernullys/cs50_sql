@@ -1014,6 +1014,15 @@ MySQL Workbench Notes from Bro Code.
     In built functions to take date, time and datatime values:
     CURRENT_DATE(), CURRENT_TIME(), NOW()
 
+    We can create constrains when writing the table but if we need to modify to add constrains we have some notes:
+    If we want to add NOT NULL constrain into a table:
+        ALTER TABLE table_name
+        MODIFY colum_name NOT NULL;
+    But if we want UNIQUE constrain:
+        ALTER TABLE table_name
+        ADD CONSTRAINT
+        UNIQUE(column_name);
+
 
 MySQL notes from Alex The Analyst:
 
