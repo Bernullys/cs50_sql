@@ -1023,6 +1023,13 @@ MySQL Workbench Notes from Bro Code.
         ADD CONSTRAINT
         UNIQUE(column_name);
 
+    Another way to use check constraint:
+        When creating a table:
+            CONSTRAINT CHECK (column_name + condition);
+        When we want to add it to an existing table:
+            ALTER TABLE table_name
+            ADD CONSTRAINT column_name CHECK(column_name + condition);
+
 
 MySQL notes from Alex The Analyst:
 
