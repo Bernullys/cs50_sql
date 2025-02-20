@@ -1029,6 +1029,10 @@ MySQL Workbench Notes from Bro Code.
         When we want to add it to an existing table:
             ALTER TABLE table_name
             ADD CONSTRAINT column_name CHECK(column_name + condition);
+    To add default constraint to a table:
+        ALTER TABLE table_name
+        ALTER column_name SET DEFAULT default_value;
+        This is quit nice when we have to add datetime values. We could use NOW() as DEFAULT
 
 
 MySQL notes from Alex The Analyst:
