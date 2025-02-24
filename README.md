@@ -1033,6 +1033,17 @@ MySQL Workbench Notes from Bro Code.
         ALTER TABLE table_name
         ALTER column_name SET DEFAULT default_value;
         This is quit nice when we have to add datetime values. We could use NOW() as DEFAULT
+    To add a primary key to an existing column:
+        ALTER TABLE table_name
+        ADD CONSTRAINT
+        PRIMARY KEY(column_name);
+    Or to add a new column with primary key constraint:
+        ALTER TABLE table_name
+        ADD COLUMN column_name;
+        then:
+        ALTER TABLE table_name
+        MODIFY COLUMN column_name OTHERS CONSTRAINT AUTO_INCREMENT PRIMARY KEY;
+
 
 
 MySQL notes from Alex The Analyst:
