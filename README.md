@@ -1043,6 +1043,19 @@ MySQL Workbench Notes from Bro Code.
         then:
         ALTER TABLE table_name
         MODIFY COLUMN column_name OTHERS CONSTRAINT AUTO_INCREMENT PRIMARY KEY;
+    To delete a foreign key:
+        ALTER TABLE table_name
+        DROP FOREIGN KEY foreign_key_name;
+    To applay a foreign key to a table that already exists:
+        ALTER TABLE table_name
+        ADD CONSTRAINT foreign_key_name (not nessesaryly be named, this line can be omited)
+        FOREIGN KEY(column_name) REFERENCES other_table_name(other_table_column);
+
+    Autoincrement attribute AUTO_INCREMENT:
+        Can be applied to a column that is set as a key.
+        We can set a primary key to start from another value:
+        ALTER TABLE table_name
+        AUTO_INCREMENT = any_integer;
 
 
 
