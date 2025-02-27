@@ -170,16 +170,17 @@ Lecture 1 - Relating
 
     JOIN keyword
     This keyword allows us to combine two or more tables together.
+    We can select every column or the ones we want
 
     SELECT * FROM "sea_lions"
     JOIN "migrations" ON "migrations"."id" = "sea_lions"."id";
 
-    INNER JOIN return colums that are the same on both tables. 
+    INNER JOIN return colums that have common foreign key with primary key. Others are ignored. (Is the interseption part.)
     
     OUTER JOIN returns all colums of the left or right. It work with this syntax:
     (left is the from table)
-    LEFT JOIN    ===   LEFT OUTER JOIN
-    RIGHT JOIN   ===   RIGHT OUTER JOIN
+    LEFT JOIN    ===   LEFT OUTER JOIN  everything from the table on the left and the common from the right table.
+    RIGHT JOIN   ===   RIGHT OUTER JOIN everything from the table on the right and the common from the left table.
     
     FULL JOIN       
 
