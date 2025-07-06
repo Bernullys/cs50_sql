@@ -117,6 +117,12 @@ Lecture 1 - Relating
     One to many.
     Many to many.
 
+    Value (left)	Value (right)	Meaning
+        |o	            o|	        Zero or one
+        ||	            ||	        Exactly one
+        }o	            o{	        Zero or more (no upper limit)
+        }|	            |{	        One or more (no upper limit)
+
     Entity ralationship diagrams (ER Diagrams).
     In the project desription is a link where we can design ERD images.
 
