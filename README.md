@@ -176,16 +176,17 @@ Lecture 1 - Relating
 
     JOIN keyword
     This keyword allows us to combine two or more tables together.
+    We can select every column or the ones we want
 
     SELECT * FROM "sea_lions"
     JOIN "migrations" ON "migrations"."id" = "sea_lions"."id";
 
-    INNER JOIN return colums that are the same on both tables. 
+    INNER JOIN return colums that have common foreign key with primary key. Others are ignored. (Is the interseption part.)
     
     OUTER JOIN returns all colums of the left or right. It work with this syntax:
     (left is the from table)
-    LEFT JOIN    ===   LEFT OUTER JOIN
-    RIGHT JOIN   ===   RIGHT OUTER JOIN
+    LEFT JOIN    ===   LEFT OUTER JOIN  everything from the table on the left and the common from the right table.
+    RIGHT JOIN   ===   RIGHT OUTER JOIN everything from the table on the right and the common from the left table.
     
     FULL JOIN       
 
@@ -1008,6 +1009,62 @@ MySQL Workbench Notes from Bro Code.
     MODIFY column_n data_type
     AFTER column_m;
     If we want tha column to be first we can type directly FIRST.
+
+    AUTOCOMMIT / COMMIT / ROLLBACK
+    By default autocommit is ON so every operation get save right away, but we can set autocommit off:
+    SET AUTOCOMMIT = OFF;
+    Then operations to be saved have to be commited manually:
+    COMMIT;
+    So if we want to go back to undo some operation, we can use:
+    ROLLBACK;
+
+    In built functions to take date, time and datatime values:
+    CURRENT_DATE(), CURRENT_TIME(), NOW()
+
+    We can create constrains when writing the table but if we need to modify to add constrains we have some notes:
+    If we want to add NOT NULL constrain into a table:
+        ALTER TABLE table_name
+        MODIFY colum_name NOT NULL;
+    But if we want UNIQUE constrain:
+        ALTER TABLE table_name
+        ADD CONSTRAINT
+        UNIQUE(column_name);
+
+    Another way to use check constraint:
+        When creating a table:
+            CONSTRAINT CHECK (column_name + condition);
+        When we want to add it to an existing table:
+            ALTER TABLE table_name
+            ADD CONSTRAINT column_name CHECK(column_name + condition);
+    To add default constraint to a table:
+        ALTER TABLE table_name
+        ALTER column_name SET DEFAULT default_value;
+        This is quit nice when we have to add datetime values. We could use NOW() as DEFAULT
+    To add a primary key to an existing column:
+        ALTER TABLE table_name
+        ADD CONSTRAINT
+        PRIMARY KEY(column_name);
+    Or to add a new column with primary key constraint:
+        ALTER TABLE table_name
+        ADD COLUMN column_name;
+        then:
+        ALTER TABLE table_name
+        MODIFY COLUMN column_name OTHERS CONSTRAINT AUTO_INCREMENT PRIMARY KEY;
+    To delete a foreign key:
+        ALTER TABLE table_name
+        DROP FOREIGN KEY foreign_key_name;
+    To applay a foreign key to a table that already exists:
+        ALTER TABLE table_name
+        ADD CONSTRAINT foreign_key_name (not nessesaryly be named, this line can be omited)
+        FOREIGN KEY(column_name) REFERENCES other_table_name(other_table_column);
+
+    Autoincrement attribute AUTO_INCREMENT:
+        Can be applied to a column that is set as a key.
+        We can set a primary key to start from another value:
+        ALTER TABLE table_name
+        AUTO_INCREMENT = any_integer;
+
+
 
 MySQL notes from Alex The Analyst:
 
