@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, MetaData, Table, select, case
+from sqlalchemy import create_engine, MetaData, Table, select
 
 engine = create_engine("sqlite:///cyberchase.db", echo=True)
 metadata = MetaData()
