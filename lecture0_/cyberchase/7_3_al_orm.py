@@ -13,7 +13,8 @@ class EpisodesTable(Base):
     topic = Column(String(50))
 
 with LocalSession() as db_conn:
-    result = db_conn.query(EpisodesTable.title, EpisodesTable.topic).where(EpisodesTable.topic.like("%fraction%"))
+    result = db_conn.query(EpisodesTable.title, EpisodesTable.topic
+                           ).where(EpisodesTable.topic.like("%fraction%"))
 
 for r in result:
     print(r[0], "|", r[1])

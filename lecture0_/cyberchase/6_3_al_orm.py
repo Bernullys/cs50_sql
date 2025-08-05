@@ -14,7 +14,8 @@ class EpisodesTable(Base):
     air_date = Column(String(50))
 
 with LocalSession() as session:
-    title = session.query(EpisodesTable.title).filter(EpisodesTable.season == 6, EpisodesTable.air_date.like("2007-%"))
+    title = session.query(EpisodesTable.title
+                          ).filter(EpisodesTable.season == 6, EpisodesTable.air_date.like("2007-%"))
 
 for t in title:
     print(t[0])
