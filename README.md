@@ -1239,4 +1239,27 @@ MySQL notes from Alex The Analyst:
 
     Project Cleanind_data (All notes in data_cleaning.sql)
     Project Exploratory Data Analysis.
+
+Steps to create a new MySQL user:
+
+    0. Show current users:
+        SELECT user, host FROM mysql.user;
+    1. Log in as root (or another admin user):
+        mysql -u root -p
+    2. Create a new user:
+        CREATE USER 'new_username'@'localhost' IDENTIFIED BY 'strong_password';
+        or if we want the new user to connect from anywhere:
+        CREATE USER 'new_username'@'%' IDENTIFIED BY 'strong_password';
+    3. Grant permissions:
+        GRANT ALL PRIVILEGES ON my_database.* TO 'new_username'@'localhost';
+        Or, if you want the user to have access to everything (be careful):
+        GRANT ALL PRIVILEGES ON *.* TO 'new_username'@'localhost' WITH GRANT OPTION;
+    4. Apply changes:
+        FLUSH PRIVILEGES;
+    5. Delete users:
+        DROP USER 'username'@'host';
+        FLUSH PRIVILEGES;
+
+
+
             
